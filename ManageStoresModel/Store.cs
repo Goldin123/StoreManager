@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ManageStoresData
+namespace ManageStoresModel
 {
-    public class Class1
+    internal class Store
     {
     }
 }

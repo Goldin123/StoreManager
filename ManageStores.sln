@@ -19,6 +19,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManageStoresData", "ManageS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManageStoresModel", "ManageStoresModel\ManageStoresModel.csproj", "{0A22E712-B126-4A62-BDD1-FCE93C122E67}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assessment", "Assessment", "{6630753A-896D-4DFE-96D4-A030A1FC111D}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Downloads\fooflovers.zip = ..\..\..\Downloads\fooflovers.zip
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

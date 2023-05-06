@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ManageStoresModel
 {
-    public class Class1
+    internal class Product
     {
     }
 }
