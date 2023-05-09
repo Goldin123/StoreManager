@@ -13,7 +13,7 @@ namespace ManageStores.Controllers
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public ActionResult Index()
         {
-            _log.Info("started");
+            _log.Info($"{nameof(HomeController)} - ");
             return View();
         }
 

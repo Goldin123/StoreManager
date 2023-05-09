@@ -20,7 +20,7 @@ namespace ManageStores
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             log4net.Config.XmlConfigurator.Configure();
-            _log.Info("website started");
+            _log.Info($"{nameof(MvcApplication)} - manage stores website has started.");
 
         }
     }

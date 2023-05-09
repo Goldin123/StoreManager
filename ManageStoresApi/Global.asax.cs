@@ -1,4 +1,5 @@
 ﻿using log4net;
+using ManageStoresApi.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace ManageStoresApi
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             log4net.Config.XmlConfigurator.Configure();
-            _log.Info("api started");
+            _log.Info($"{nameof(WebApiApplication)} - manage stores api has started.");
 
         }
     }
