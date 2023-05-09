@@ -61,7 +61,7 @@
                             </a>
                         </li>
                         <li class="nav-item menu-open" role="presentation">
-                            <a href="@Url.Action("Index","Products")" class="nav-link ">
+                            <a href="@Url.Action("Index","Products")" class="nav-link " role="menuitem">
                                 <i class="nav-icon fas fa-list-alt"></i>
                                 <p>
                                     Products
@@ -70,7 +70,7 @@
                             </a>
                             <ul class="nav nav-treeview" role="presentation">
                                 <li class="nav-item" role="presentation">
-                                    <a href="@Url.Action("Index","Products")" class="nav-link">
+                                    <a href="@Url.Action("Index","Products")" class="nav-link" role="menuitem">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             View
@@ -79,7 +79,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a href="@Url.Action("AddProduct","Products")" class="nav-link">
+                                    <a href="@Url.Action("AddProduct","Products")" class="nav-link" role="menuitem">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Add</p>
                                     </a>
@@ -88,7 +88,7 @@
                             </ul>
                         </li>
                         <li class="nav-item " role="presentation">
-                            <a href="@Url.Action("Index","Products")" class="nav-link ">
+                            <a href="@Url.Action("Index","Products")" class="nav-link " role="menuitem">
                                 <i class="nav-icon fas fa-building"></i>
                                 <p>
                                     Stores
@@ -97,16 +97,16 @@
                             </a>
                             <ul class="nav nav-treeview" role="presentation">
                                 <li class="nav-item" role="presentation">
-                                    <a href="@Url.Action("Index","Products")" class="nav-link">
+                                    <a href="@Url.Action("Index","Products")" class="nav-link" role="menuitem">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
-                                            View
+                                            Manage
                                             @*<span class="right badge badge-success">(@GlodinAutoTradeModel.Models.Globals.TotalProducts) product(s)</span>*@
                                         </p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="@Url.Action("AddProduct","Products")" class="nav-link">
+                                <li class="nav-item" role="presentation">
+                                    <a href="@Url.Action("AddProduct","Products")" class="nav-link" role="menuitem">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Add</p>
                                     </a>
@@ -114,8 +114,8 @@
 
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="@Url.Action("about","Home")" class="nav-link">
+                        <li class="nav-item" role="presentation">
+                            <a href="@Url.Action("about","Home")" class="nav-link" role="menuitem">
                                 <i class="nav-icon fas fa-calendar"></i>
                                 <p>
                                    History
@@ -123,8 +123,8 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="@Url.Action("signout","Account")" class="nav-link">
+                        <li class="nav-item" role="presentation">
+                            <a href="@Url.Action("signout","Account")" class="nav-link" role="menuitem">
                                 <i class="nav-icon fas fa-bolt"></i>
                                 <p>
                                     Sign Out
