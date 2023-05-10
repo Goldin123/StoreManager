@@ -64,7 +64,7 @@ namespace ManageStoresApi.Controllers
 
         [Route("api/Store/AddStoresProducts")]
         [HttpPost]
-        public IHttpActionResult AddStores([FromBody] List<StoreProduct> storesProducts)
+        public IHttpActionResult AddStores([FromBody] List<StoreProductModel> storesProducts)
         {
             try
             {

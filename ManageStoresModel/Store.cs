@@ -28,7 +28,7 @@ namespace ManageStoresModel
         public DateTime? OpenDate { get; set; }
     }
 
-    public class StoreProduct 
+    public class StoreProductModel 
     {
         public int SID { get; set; }
         public int PID { get; set; }

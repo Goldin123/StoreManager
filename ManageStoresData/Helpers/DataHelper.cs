@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ManageStoresData.DB;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -89,7 +90,7 @@ namespace ManageStoresData.Helpers
 
             return dt;
         }
-        public static DataTable CreateStoreProductTypeDataTable(List<ManageStoresModel.StoreProduct> storesProducts)
+        public static DataTable CreateStoreProductTypeDataTable(List<ManageStoresModel.StoreProductModel> storesProducts)
         {
             DataTable dt = new DataTable();
 
@@ -110,6 +111,13 @@ namespace ManageStoresData.Helpers
             }
 
             return dt;
+        }
+        public static bool ValidateApiUser(string username, string password)
+        {
+            using (var context = new FoodLoversEntities())
+            {
+                return context.ApiUsers.Where(u => u.Username == username && u.Password == password).Count() > 0;
+            }
         }
     }
 }

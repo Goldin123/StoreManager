@@ -61,7 +61,7 @@ namespace ManageStoresApi.Implementations
             }
         }
 
-        public async Task<string> AddStoresProductsAsync(List<StoreProduct> storesProducts)
+        public async Task<string> AddStoresProductsAsync(List<StoreProductModel> storesProducts)
         {
             try
             {

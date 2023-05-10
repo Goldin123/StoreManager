@@ -118,7 +118,7 @@ namespace ManageStoresData.Implementations
                 return ex.Message;
             }
         }
-        public async Task<string> AddStoresProductsAsync(List<StoreProduct> storesProducts) 
+        public async Task<string> AddStoresProductsAsync(List<StoreProductModel> storesProducts) 
         {
             try
             {
