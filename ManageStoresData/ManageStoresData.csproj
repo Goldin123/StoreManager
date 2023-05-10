@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.0.123\lib\net461\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -47,6 +50,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -56,22 +61,65 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Implementations\Product.cs" />
-    <Compile Include="Implementations\Store.cs" />
-    <Compile Include="Interfaces\IProduct.cs" />
-    <Compile Include="Interfaces\IStore.cs" />
+    <Compile Include="DB\FoodLovers.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FoodLovers.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\FoodLovers.cs" />
+    <Compile Include="DB\FoodLovers.Designer.cs">
+      <DependentUpon>FoodLovers.edmx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="DB\FoodLovers1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FoodLovers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Product.cs">
+      <DependentUpon>FoodLovers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Store.cs">
+      <DependentUpon>FoodLovers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\DataHelper.cs" />
+    <Compile Include="Implementations\ProductData.cs" />
+    <Compile Include="Implementations\StoreData.cs" />
+    <Compile Include="Interfaces\IProductData.cs" />
+    <Compile Include="Interfaces\IStoreData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DB\" />
+    <ProjectReference Include="..\ManageStoresModel\ManageStoresModel.csproj">
+      <Project>{0a22e712-b126-4a62-bdd1-fce93c122e67}</Project>
+      <Name>ManageStoresModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EntityDeploy Include="DB\FoodLovers.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>FoodLovers.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="DB\FoodLovers.edmx.diagram">
+      <DependentUpon>FoodLovers.edmx</DependentUpon>
+    </None>
     <None Include="packages.config" />
     <None Include="Scripts\jquery-3.6.4.min.map" />
     <None Include="Scripts\jquery-3.6.4.slim.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DB\FoodLovers.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>FoodLovers.edmx</DependentUpon>
+      <LastGenOutput>FoodLovers.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DB\FoodLovers.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>FoodLovers.edmx</DependentUpon>
+      <LastGenOutput>FoodLovers1.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\jquery-3.6.4.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.4.js" />
     <Content Include="Scripts\jquery-3.6.4.min.js" />
@@ -80,6 +128,9 @@
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
