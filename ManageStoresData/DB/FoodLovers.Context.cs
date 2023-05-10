@@ -26,5 +26,6 @@ namespace ManageStoresData.DB
         }
     
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Store> Stores { get; set; }
     }
 }

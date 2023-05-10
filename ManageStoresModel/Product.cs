@@ -13,8 +13,8 @@ namespace ManageStoresModel
         public string ProductName { get; set; }
         public bool? WeightedItem { get; set; }
         public decimal? SuggestedSellingPrice { get; set; }
-        public DateTime DateAdded { get; set; }
-        public DateTime DateUpdated { get; set; }
+        public DateTime? DateAdded { get; set; }
+        public DateTime? DateUpdated { get; set; }
 
         public ProductDetail() 
         {
@@ -32,7 +32,7 @@ namespace ManageStoresModel
         }
     }
 
-    public class ProductRequest 
+    public class AddProductRequest 
     {
         public int ID { get; set; }
         public string ProductName { get; set; }

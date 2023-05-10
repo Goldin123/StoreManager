@@ -16,19 +16,16 @@ namespace ManageStoresApi.Implementations
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly IProductData _productData;
-
         public ProductApi() 
         { }
         public ProductApi(IProductData productData) 
         {
             _productData = productData;
         }
-
         public async Task<List<ProductDetail>> GetProductsAsync() 
         {
             try
             {
-                _log.Info($"{nameof(GetProductsAsync)} attempting to get products.");
                 return await _productData.GetProductsAsync();
             }
             catch (Exception ex) 
@@ -36,9 +33,20 @@ namespace ManageStoresApi.Implementations
                 _log.Error($"{nameof(GetProductsAsync)} {ex.Message} {ex.StackTrace}.");
                 return new List<ProductDetail>();
             }
-            
         }
-        public async Task<string> AddProductsAsync(List<ProductRequest> products) 
+        public async Task<ProductDetail> GetProductsByIdAsync(int Id)
+        {
+            try
+            {
+                return await _productData.GetProductByIdAsync(Id);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"{nameof(GetProductsByIdAsync)} {ex.Message} {ex.StackTrace}.");
+                return new ProductDetail();
+            }
+        }
+        public async Task<string> AddProductsAsync(List<AddProductRequest> products) 
         {
             try
             {
@@ -51,7 +59,6 @@ namespace ManageStoresApi.Implementations
             }
 
         }
-
         public async Task<string> UpdateProductsAsync(List<UpdateProductRequest> products)
         {
             try

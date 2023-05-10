@@ -12,36 +12,22 @@ using System.Web.Http;
 
 namespace ManageStoresApi.Controllers
 {
-    public class ProductController : ApiController
+    public class StoreController : ApiController
     {
-       private IProductApi _productApi;
+        private IStoreApi _storeApi;
+        public StoreController()
+        {
+            IStoreData storeData = new StoreData();
+            _storeApi = new StoreApi(storeData);
+        }
 
-        public ProductController()
-        {
-            IProductData productData = new ProductData();
-            _productApi = new ProductApi(productData);
-        }
-      
-        [Route("api/Product/GetProducts")]
+        [Route("api/Store/GetStores")]
         [HttpGet]
-        public IHttpActionResult GetProducts()
+        public IHttpActionResult GetStores()
         {
             try
             {
-                return Ok(_productApi.GetProductsAsync());
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-        [Route("api/Product/GetProductById")]
-        [HttpGet]
-        public IHttpActionResult GetProductById([FromUri]int Id)
-        {
-            try
-            {
-                return Ok(_productApi.GetProductsByIdAsync(Id));
+                return Ok(_storeApi.GetStoresAsync());
             }
             catch
             {
@@ -49,26 +35,40 @@ namespace ManageStoresApi.Controllers
             }
         }
 
-        [Route("api/Product/AddProducts")]
+        [Route("api/Store/GetStoreById")]
+        [HttpGet]
+        public IHttpActionResult GetStoreById([FromUri]int Id)
+        {
+            try
+            {
+                return Ok(_storeApi.GetStoreByIdAsync(Id));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [Route("api/Store/AddStores")]
         [HttpPost]
-        public IHttpActionResult AddProducts([FromBody] List<AddProductRequest> products)
+        public IHttpActionResult AddStores([FromBody] List<AddStoresRequest> stores)
         {
             try
             {
-                return Ok(_productApi.AddProductsAsync(products));
+                return Ok(_storeApi.AddStoresAsync(stores));
             }
             catch
             {
                 return BadRequest();
             }
         }
-        [Route("api/Product/UpdateProducts")]
-        [HttpPut]
-        public IHttpActionResult UpdateProducts([FromBody] List<UpdateProductRequest> products)
+
+        [Route("api/Store/AddStoresProducts")]
+        [HttpPost]
+        public IHttpActionResult AddStores([FromBody] List<StoreProduct> storesProducts)
         {
             try
             {
-                return Ok(_productApi.UpdateProductsAsync(products));
+                return Ok(_storeApi.AddStoresProductsAsync(storesProducts));
             }
             catch
             {

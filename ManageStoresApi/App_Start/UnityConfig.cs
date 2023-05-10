@@ -17,6 +17,8 @@ namespace ManageStoresApi.App_Start
             var container = new UnityContainer();
             container.RegisterType<IProductData, ProductData>();
             container.RegisterType<IProductApi, ProductApi>();
+            container.RegisterType<IStoreData, StoreData>();
+            container.RegisterType<IStoreApi, StoreApi>();
         }
     }
 }

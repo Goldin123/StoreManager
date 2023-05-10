@@ -80,8 +80,14 @@
     <Compile Include="DB\Product.cs">
       <DependentUpon>FoodLovers.tt</DependentUpon>
     </Compile>
+    <Compile Include="DB\Store.cs">
+      <DependentUpon>FoodLovers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\DataHelper.cs" />
     <Compile Include="Implementations\ProductData.cs" />
+    <Compile Include="Implementations\StoreData.cs" />
     <Compile Include="Interfaces\IProductData.cs" />
+    <Compile Include="Interfaces\IStoreData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

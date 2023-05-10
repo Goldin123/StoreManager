@@ -11,15 +11,28 @@
           </Key>
           <Property Name="PID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ID" Type="int" />
-          <Property Name="ProductName" Type="varchar" MaxLength="50" />
+          <Property Name="ProductName" Type="varchar" MaxLength="500" />
           <Property Name="WeightedItem" Type="bit" />
           <Property Name="SuggestedSellingPrice" Type="decimal" Precision="18" Scale="0" />
           <Property Name="UnitsInStock" Type="int" />
           <Property Name="DateAdded" Type="datetime" />
           <Property Name="DateUpdated" Type="datetime" />
         </EntityType>
+        <EntityType Name="Store">
+          <Key>
+            <PropertyRef Name="SID" />
+          </Key>
+          <Property Name="SID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID" Type="int" />
+          <Property Name="StoreName" Type="varchar" MaxLength="500" />
+          <Property Name="TelephoneNumber" Type="varchar" MaxLength="500" />
+          <Property Name="OpenDate" Type="datetime" />
+          <Property Name="DateAdded" Type="datetime" />
+          <Property Name="DateUpdated" Type="datetime" />
+        </EntityType>
         <EntityContainer Name="FoodLoversModelStoreContainer">
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Store" EntityType="Self.Store" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -30,7 +43,7 @@
             <PropertyRef Name="PID" />
           </Key>
           <Property Name="PID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProductName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="WeightedItem" Type="Boolean" />
           <Property Name="SuggestedSellingPrice" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="UnitsInStock" Type="Int32" />
@@ -40,7 +53,20 @@
         </EntityType>
         <EntityContainer Name="FoodLoversEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="Stores" EntityType="FoodLoversModel.Store" />
         </EntityContainer>
+        <EntityType Name="Store">
+          <Key>
+            <PropertyRef Name="SID" />
+          </Key>
+          <Property Name="SID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="Int32" />
+          <Property Name="StoreName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="TelephoneNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="OpenDate" Type="DateTime" Precision="3" />
+          <Property Name="DateAdded" Type="DateTime" Precision="3" />
+          <Property Name="DateUpdated" Type="DateTime" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -58,6 +84,19 @@
                 <ScalarProperty Name="UnitsInStock" ColumnName="UnitsInStock" />
                 <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
                 <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stores">
+            <EntityTypeMapping TypeName="FoodLoversModel.Store">
+              <MappingFragment StoreEntitySet="Store">
+                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="OpenDate" ColumnName="OpenDate" />
+                <ScalarProperty Name="TelephoneNumber" ColumnName="TelephoneNumber" />
+                <ScalarProperty Name="StoreName" ColumnName="StoreName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="SID" ColumnName="SID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

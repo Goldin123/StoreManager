@@ -10,7 +10,8 @@ namespace ManageStoresData.Interfaces
     public interface IProductData
     {
         Task<List<ProductDetail>> GetProductsAsync();
-        Task<string> AddProductsAsync(List<ProductRequest> products);
+        Task<ProductDetail> GetProductByIdAsync(int Id);
+        Task<string> AddProductsAsync(List<AddProductRequest> products);
         Task<string> UpdateProductsAsync(List<UpdateProductRequest> products);
     }
 }

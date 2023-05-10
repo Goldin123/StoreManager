@@ -1,7 +1,9 @@
 ﻿using Dapper;
 using log4net;
 using ManageStoresData.DB;
+using ManageStoresData.Helpers;
 using ManageStoresData.Interfaces;
+using ManageStoresModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,19 +26,20 @@ namespace ManageStoresData.Implementations
             {
                 _log.Info($"{nameof(GetProductsAsync)} attempting to get products.");
 
-
                 using (var context = new FoodLoversEntities())
                 {
-                   
                     var products = context.Products.AsQueryable();
-                    
-                    var lst =  (from a in products
-                                     select new ManageStoresModel.ProductDetail
+
+                    var lst = (from a in products
+                               select new ManageStoresModel.ProductDetail
                                {
+                                   ID = (int)a.ID,
                                    ProductID = a.PID,
                                    ProductName = a.ProductName,
                                    WeightedItem = a.WeightedItem,
                                    SuggestedSellingPrice = a.SuggestedSellingPrice,
+                                   DateAdded = a.DateAdded,
+                                   DateUpdated = a.DateUpdated
 
                                }).ToList<ManageStoresModel.ProductDetail>();
 
@@ -51,7 +54,7 @@ namespace ManageStoresData.Implementations
                 return new List<ManageStoresModel.ProductDetail>();
             }
         }
-        public async Task<string> AddProductsAsync(List<ManageStoresModel.ProductRequest> products) 
+        public async Task<string> AddProductsAsync(List<ManageStoresModel.AddProductRequest> products)
         {
             try
             {
@@ -59,11 +62,11 @@ namespace ManageStoresData.Implementations
 
                 using (var db = new FoodLoversEntities())
                 {
-                    DataTable dtProduct = CreateDataTable(products);
+                    DataTable dtProduct = DataHelper.CreateProductTypeDataTable(products);
                     var tvp = dtProduct.AsTableValuedParameter("dbo.ProductType");
                     var parameters = new DynamicParameters();
                     parameters.Add("NewProducts", tvp);
-                    var response =  db.Database.Connection
+                    var response = db.Database.Connection
                            .Query("InsertProducts", parameters, commandType: CommandType.StoredProcedure);
 
                 }
@@ -85,7 +88,7 @@ namespace ManageStoresData.Implementations
 
                 using (var db = new FoodLoversEntities())
                 {
-                    DataTable dtProduct = CreateDataTable(products);
+                    DataTable dtProduct = DataHelper.CreateProductTypeDataTable(products);
                     var tvp = dtProduct.AsTableValuedParameter("dbo.ProductType");
                     var parameters = new DynamicParameters();
                     parameters.Add("ProductsToUpdate", tvp);
@@ -103,63 +106,43 @@ namespace ManageStoresData.Implementations
                 return ex.Message;
             }
         }
-        
-        #region Helpers
-        private DataTable CreateDataTable(List<ManageStoresModel.UpdateProductRequest> products)
+        public async Task<ProductDetail> GetProductByIdAsync(int id)
         {
-            DataTable dt = new DataTable();
-
-            dt.Columns.Add("PID", typeof(int));
-            dt.Columns.Add("ID", typeof(int));
-            dt.Columns.Add("ProductName", typeof(string));
-            dt.Columns.Add("WeightedItem", typeof(bool));
-            dt.Columns.Add("SuggestedSellingPrice", typeof(decimal));
-            dt.Columns.Add("UnitsInStock", typeof(int));          
-            dt.Columns.Add("DateAdded", typeof(DateTime));
-            dt.Columns.Add("DateUpdated", typeof(DateTime));
-            
-            foreach (var item in products)
+            try
             {
-                dt.Rows.Add(
-                    item.ProductID,
-                    item.ID, 
-                    item.ProductName, 
-                    item.WeightedItem, 
-                    item.SuggestedSellingPrice,
-                    0,
-                    DateTime.Now,
-                    DateTime.Now);
+                _log.Info($"{nameof(GetProductByIdAsync)} attempting to get product with id {id}.");
+
+                using (var context = new FoodLoversEntities())
+                {
+                    var products = context.Products.AsQueryable();
+
+                    var prod = (from a in products
+                               where a.ID == id
+                               select new ManageStoresModel.ProductDetail
+                               {
+                                   ID = (int)a.ID,
+                                   ProductID = a.PID,
+                                   ProductName = a.ProductName,
+                                   WeightedItem = a.WeightedItem,
+                                   SuggestedSellingPrice = a.SuggestedSellingPrice,
+                                   DateAdded = a.DateAdded,
+                                   DateUpdated = a.DateUpdated
+                               }).FirstOrDefault();
+                    if (prod != null)
+                        _log.Info($"{nameof(GetProductByIdAsync)} successfully returned {prod.ProductName} product.");
+                    else
+                        _log.Info($"{nameof(GetProductByIdAsync)} no product with id {id} found.");
+                    return prod;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"{nameof(GetProductByIdAsync)} {ex.Message} {ex.StackTrace}.");
+                return new ManageStoresModel.ProductDetail();
             }
 
-            return dt;
         }
-        private DataTable CreateDataTable(List<ManageStoresModel.ProductRequest> products)
-        {
-            DataTable dt = new DataTable();
 
-            dt.Columns.Add("PID", typeof(int));
-            dt.Columns.Add("ID", typeof(int));
-            dt.Columns.Add("ProductName", typeof(string));
-            dt.Columns.Add("WeightedItem", typeof(bool));
-            dt.Columns.Add("SuggestedSellingPrice", typeof(decimal));
-            dt.Columns.Add("UnitsInStock", typeof(int));
-            dt.Columns.Add("DateAdded", typeof(DateTime));
-            dt.Columns.Add("DateUpdated", typeof(DateTime));
-
-            foreach (var item in products)
-            {
-                dt.Rows.Add(0,
-                    item.ID,
-                    item.ProductName,
-                    item.WeightedItem,
-                    item.SuggestedSellingPrice,
-                    0,
-                    DateTime.Now,
-                    DateTime.Now);
-            }
-
-            return dt;
-        }
-        #endregion
     }
 }

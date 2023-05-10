@@ -10,7 +10,8 @@ namespace ManageStoresApi.Interfaces
     public interface IProductApi
     {
         Task<List<ProductDetail>> GetProductsAsync();
-        Task<string> AddProductsAsync(List<ProductRequest> products);
+        Task<ProductDetail> GetProductsByIdAsync(int Id);
+        Task<string> AddProductsAsync(List<AddProductRequest> products);
         Task<string> UpdateProductsAsync(List<UpdateProductRequest> products);
 
     }
