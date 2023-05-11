@@ -1469,6 +1469,7 @@
     <Content Include="Content\plugins\jquery-validation\localization\methods_nl.min.js" />
     <Content Include="Content\plugins\jquery-validation\localization\methods_pt.js" />
     <Content Include="Content\plugins\jquery-validation\localization\methods_pt.min.js" />
+    <Content Include="Content\plugins\jquery.tabletoxml.js" />
     <Content Include="Content\plugins\jquery.unobtrusive-ajax.js" />
     <Content Include="Content\plugins\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Content\plugins\jquery.validate.js" />
@@ -2102,6 +2103,7 @@
     <Content Include="Content\plugins\uplot\uPlot.iife.js" />
     <Content Include="Content\plugins\uplot\uPlot.iife.min.js" />
     <Content Include="Content\plugins\uplot\uPlot.min.css" />
+    <Content Include="Content\plugins\xml-js.min.js" />
     <Content Include="Content\Templates\ProductXMLTemplate.xml" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
