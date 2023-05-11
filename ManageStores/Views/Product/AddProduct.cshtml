@@ -9,6 +9,43 @@
 <section class="content">
     <div class="container-fluid">
         <br />
+        <div class="info-box">
+            <span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">Information</span>
+                <span class="info-box-text">Please make sure you select the correct file type depending on the file you are uploading.</span>
+                <span class="info-box-text">Any Duplicate ID entries will be treated as updates to existing products.</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        @if (TempData["UploadStatus"] != null)
+        {
+            var msg = TempData["UploadStatus"].ToString();
+            <br />
+            <div class="info-box">
+                <span class="info-box-icon bg-success"><i class="far fa-thumbs-up"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">@msg</span>
+                </div>
+            </div>
+        }
+        @if (TempData["UploadError"] != null)
+        {
+            var msg = TempData["UploadError"].ToString();
+            <br />
+            <div class="info-box">
+                <span class="info-box-icon bg-danger"><i class="far fa-thumbs-down"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Error</span>
+                    <span class="info-box-number">@msg</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        }
+        <br />
         <div class="row">
             <div>
                 @using (Html.BeginForm("AddProductToInventory", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -32,13 +69,12 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button class="btn btn-primary" type="submit">Submit</button>
+                            <button class="btn btn-primary" type="submit">Submit</button>&nbsp;&nbsp; @Html.ActionLink("View Products", "Index", "Product", new object { }, new { @class = "btn btn-warning" })
                         </div>
                     </div>
                 }
             </div>
         </div>
-
     </div>
 </section>
 

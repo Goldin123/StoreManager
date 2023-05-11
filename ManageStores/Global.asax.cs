@@ -22,6 +22,7 @@ namespace ManageStores
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             log4net.Config.XmlConfigurator.Configure();
             UnityConfig.RegisterComponents();
+
             _log.Info($"{nameof(MvcApplication)} - manage stores website has started.");
 
         }

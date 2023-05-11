@@ -40,14 +40,19 @@ namespace ManageStores.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _productSite.AddProductFileAsync(product);
-                //if (result.Item1)
-                //{
-                //    var products = await _productRepository.GetProducts();
-                //    if (products.Item1 != null)
-                //        Globals.TotalProducts = products.Item1.Count();
-
-                //    TempData["ProductSuccess"] = "product added successfully.";
-                //}
+                if (result.Item1)
+                {
+                    TempData["UploadStatus"] = result.Item2;
+                }
+                else 
+                {
+                    TempData["UploadError"] = result.Item2;
+                }
+            }
+            else 
+            {
+                if (product.File ==null)
+                    TempData["UploadError"] = "Please select a file.";
             }
 
             return RedirectToAction("AddProduct");

@@ -14,6 +14,8 @@ using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using System.Web;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace ManageStores.Implementations
 {
@@ -50,6 +52,9 @@ namespace ManageStores.Implementations
         {
             try
             {
+                //Check if products exits then update 
+
+
                 _log.Info($"{nameof(AddProductFileAsync)} attempting to add file {productUpload.File.FileName}.");
 
                 string fullFilePath = Path.Combine(ConfigurationManager.AppSettings["FileLocation"], $"{DateTime.Now.ToString("MMddyyyyHHmmssfff")}_{productUpload.File.FileName}");
@@ -66,32 +71,48 @@ namespace ManageStores.Implementations
                     case ".csv":
                         if (productUpload.FileType == 1)
                         {
+                            _log.Info($"{nameof(AddProductFileAsync)} about to process csv file {productUpload.File.FileName}.");
                             var productRequest = ProcessCSVFile(fullFilePath);
                             return await AddProductsAsync(productRequest);
                         }
-                        break;
-                    case ".xls":
-                    case ".xlxs":
-                        break;
+                        else
+                        return FailedUploadDueToSelection(productUpload, fullFilePath);
                     case ".json":
                         if (productUpload.FileType == 2)
                         {
+                            _log.Info($"{nameof(AddProductFileAsync)} about to process json file {productUpload.File.FileName}.");
                             var productRequest = ProcessJsonFile(fullFilePath);
+                            return await AddProductsAsync(productRequest);
                         }
-                        break;
+                        else
+                            return FailedUploadDueToSelection(productUpload, fullFilePath);
                     case ".xml":
-                        break;
+                        if (productUpload.FileType == 3)
+                        {
+                            _log.Info($"{nameof(AddProductFileAsync)} about to process xml file {productUpload.File.FileName}.");
+                            var productRequest = ProcessXmlFile(fullFilePath);
+                            return await AddProductsAsync(productRequest);
+                        }
+                        else
+                            return FailedUploadDueToSelection(productUpload, fullFilePath);
                     default: //unknown file type
-                        break;
+                        File.Delete(fullFilePath);
+                        _log.Info($"{nameof(AddProductFileAsync)} attempting to add file {productUpload.File.FileName} failed, unknown file format.");
+                        return new Tuple<bool, string>(false, $"File {productUpload.File.FileName} could not be imported, please make the file is either csv,json or xml.");
                 }
 
-                return new Tuple<bool, string>(true, "");
             }
             catch (Exception ex)
             {
                 _log.Error($"{nameof(AddProductFileAsync)} {ex.Message} {ex.StackTrace}.");
                 return new Tuple<bool, string>(false, "");
             }
+        }
+        private static Tuple<bool, string> FailedUploadDueToSelection(ProductUpload productUpload, string fullFilePath)
+        {
+            File.Delete(fullFilePath);
+            _log.Info($"{nameof(AddProductFileAsync)} attempting to add file {productUpload.File.FileName} failed, selection vs format do not match.");
+            return new Tuple<bool, string>(false, $"File {productUpload.File.FileName} could not be uploaded, please the selection matches the file format.");
         }
         private List<AddProductRequest> ProcessCSVFile(string fullFilePath)
         {
@@ -116,17 +137,11 @@ namespace ManageStores.Implementations
                             decimal.TryParse(values[3]?.ToString().Replace(',', '.'), out decimal amnt);
                             amount = amnt;
                         }
-                       
+
                         if (!string.IsNullOrEmpty(values[2]))
                             weightedItem = values[2].ToLower().Equals("y") ? true : false;
 
-                        addProductRequests.Add(new AddProductRequest
-                        {
-                            ID = id,
-                            ProductName = productName,
-                            WeightedItem = weightedItem,
-                            SuggestedSellingPrice = amount,
-                        });
+                        AddItemsToList(addProductRequests, amount, weightedItem, id, productName);
                     }
                 }
             }
@@ -135,6 +150,16 @@ namespace ManageStores.Implementations
                 _log.Error($"{nameof(ProcessExcelFile)} {ex.Message} {ex.StackTrace}.");
             }
             return addProductRequests;
+        }
+        private static void AddItemsToList(List<AddProductRequest> addProductRequests, decimal? amount, bool? weightedItem, int id, string productName)
+        {
+            addProductRequests.Add(new AddProductRequest
+            {
+                ID = id,
+                ProductName = productName,
+                WeightedItem = weightedItem,
+                SuggestedSellingPrice = amount,
+            });
         }
         private List<AddProductRequest> ProcessExcelFile(string fullFilePath)
         {
@@ -179,14 +204,63 @@ namespace ManageStores.Implementations
         }
         private List<AddProductRequest> ProcessJsonFile(string fullFilePath)
         {
-            var addProductRequests = new List<AddProductRequest>();
-            var addProductRequestsJson = new List<AddProductRequestJson>();
-            using (StreamReader sr = File.OpenText(fullFilePath))
+            try
             {
-                addProductRequestsJson = JsonConvert.DeserializeObject<List<AddProductRequestJson>>(sr.ReadToEnd());
+                var addProductRequests = new List<AddProductRequest>();
+                var addProductRequestsJson = new List<AddProductRequestJson>();
+                using (StreamReader sr = File.OpenText(fullFilePath))
+                {
+                    addProductRequestsJson = JsonConvert.DeserializeObject<List<AddProductRequestJson>>(sr.ReadToEnd());
+                }
+                ConvertProductJsonToAddRequests(addProductRequests, addProductRequestsJson);
+                return addProductRequests;
             }
-            ConvertProductJsonToAddRequests(addProductRequests, addProductRequestsJson);
-            return addProductRequests;
+            catch (Exception ex)
+            {
+                _log.Error($"{nameof(ProcessExcelFile)} {ex.Message} {ex.StackTrace}.");
+                return new List<AddProductRequest>();
+            }
+        }
+        private List<AddProductRequest> ProcessXmlFile(string fullFilePath)
+        {
+            try
+            {
+                var addProductRequests = new List<AddProductRequest>();
+                XmlReader xmlReader = XmlReader.Create(fullFilePath);
+                while (xmlReader.Read())
+                {
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "Product"))
+                    {
+                        if (xmlReader.HasAttributes)
+                        {
+
+                            decimal? amount = null;
+                            bool? weightedItem = null;
+
+                            Int32.TryParse(xmlReader.GetAttribute("ID"), out int id);
+                            string productName = xmlReader.GetAttribute("Name");
+
+                            if (!string.IsNullOrEmpty(xmlReader.GetAttribute("SuggestedSellingPrice")))
+                            {
+                                decimal.TryParse(xmlReader.GetAttribute("SuggestedSellingPrice").ToString().Replace(',', '.'), out decimal amnt);
+                                amount = amnt;
+                            }
+
+                            if (!string.IsNullOrEmpty(xmlReader.GetAttribute("WeightedItem")))
+                                weightedItem = xmlReader.GetAttribute("WeightedItem").ToLower().Equals("y") ? true : false;
+
+                            AddItemsToList(addProductRequests, amount, weightedItem, id, productName);
+
+                        }
+                    }
+                }
+                return addProductRequests;
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"{nameof(ProcessExcelFile)} {ex.Message} {ex.StackTrace}.");
+                return new List<AddProductRequest>();
+            }
         }
         private static void ConvertProductJsonToAddRequests(List<AddProductRequest> addProductRequests, List<AddProductRequestJson> addProductRequestsJson)
         {
@@ -203,16 +277,10 @@ namespace ManageStores.Implementations
                 if (!string.IsNullOrEmpty(item.WeightedItem)) 
                     weightedItem = item.WeightedItem.ToLower().Equals("y") ? true : false;
 
-                addProductRequests.Add(new AddProductRequest
-                {
-                    ID = int.Parse(item.ID),
-                    ProductName = item.ProductName,
-                    WeightedItem = weightedItem,
-                    SuggestedSellingPrice = amount
-                });
+                AddItemsToList(addProductRequests, amount, weightedItem, int.Parse(item.ID), item.ProductName);
+
             }
         }
-
         private async Task<Tuple<bool,string>> AddProductsAsync(List<AddProductRequest> addProductRequests) 
         {
             try
