@@ -1,4 +1,5 @@
 ﻿using log4net;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace ManageStores
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             log4net.Config.XmlConfigurator.Configure();
+            UnityConfig.RegisterComponents();
             _log.Info($"{nameof(MvcApplication)} - manage stores website has started.");
 
         }

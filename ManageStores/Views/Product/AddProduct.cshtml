@@ -1,0 +1,45 @@
+﻿@model ManageStoresModel.ProductUpload
+@{
+    ViewBag.Title = "AddProduct";
+    Layout = "~/Views/Shared/_Internal.cshtml";
+}
+
+<h2>Products &nbsp;&nbsp;</h2>
+
+<section class="content">
+    <div class="container-fluid">
+        <br />
+        <div class="row">
+            <div>
+                @using (Html.BeginForm("AddProductToInventory", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken();
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Add Products</h3>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <div class="form-group">
+                                    <label>File Type</label>
+                                    @Html.DropDownListFor(a => a.FileType, ManageStores.Helpers.DropDownItems.FileType(), new { @class = "custom-select", type = "text" })
+                                </div>
+                                <div class="form-group">
+                                    <label>File</label><br />
+                                    <input type="file" id="File" name="File" />
+                                    @Html.ValidationMessageFor(m => m.File, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</section>
+
+

@@ -1,24 +1,25 @@
-﻿using ManageStoresApi.Implementations;
+using ManageStoresApi.Implementations;
 using ManageStoresApi.Interfaces;
 using ManageStoresData.Implementations;
 using ManageStoresData.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Web.Mvc;
 using Unity;
+using Unity.Mvc5;
 
-namespace ManageStoresApi.App_Start
+namespace ManageStoresApi
 {
     public static class UnityConfig
     {
         public static void RegisterComponents()
         {
-            var container = new UnityContainer();
+			var container = new UnityContainer();
+
             container.RegisterType<IProductData, ProductData>();
             container.RegisterType<IProductApi, ProductApi>();
             container.RegisterType<IStoreData, StoreData>();
             container.RegisterType<IStoreApi, StoreApi>();
+
+            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }
 }
