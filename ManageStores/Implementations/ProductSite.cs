@@ -52,18 +52,16 @@ namespace ManageStores.Implementations
         {
             try
             {
-                //Check if products exits then update 
-
 
                 _log.Info($"{nameof(AddProductFileAsync)} attempting to add file {productUpload.File.FileName}.");
 
                 string fullFilePath = Path.Combine(ConfigurationManager.AppSettings["FileLocation"], $"{DateTime.Now.ToString("MMddyyyyHHmmssfff")}_{productUpload.File.FileName}");
-                
+
                 string extension = Path.GetExtension(productUpload.File.FileName);
-                
+
                 if (!Directory.Exists(ConfigurationManager.AppSettings["FileLocation"]))
                     Directory.CreateDirectory(ConfigurationManager.AppSettings["FileLocation"]);
-                    
+
                 productUpload.File.SaveAs(fullFilePath);
 
                 switch (extension)
@@ -76,7 +74,7 @@ namespace ManageStores.Implementations
                             return await AddProductsAsync(productRequest);
                         }
                         else
-                        return FailedUploadDueToSelection(productUpload, fullFilePath);
+                            return FailedUploadDueToSelection(productUpload, fullFilePath);
                     case ".json":
                         if (productUpload.FileType == 2)
                         {
@@ -173,7 +171,8 @@ namespace ManageStores.Implementations
                         int i = 0;
                         do
                         {
-                            while (reader.Read())                             {
+                            while (reader.Read())
+                            {
                                 if (i > 0) //skip header
                                 {
                                     Int32.TryParse(reader.GetValue(0).ToString(), out int id);
@@ -273,34 +272,46 @@ namespace ManageStores.Implementations
                     decimal.TryParse(item.SuggestedSellingPrice.ToString().Replace(',', '.'), out decimal amnt);
                     amount = amnt;
                 }
-               
-                if (!string.IsNullOrEmpty(item.WeightedItem)) 
+
+                if (!string.IsNullOrEmpty(item.WeightedItem))
                     weightedItem = item.WeightedItem.ToLower().Equals("y") ? true : false;
 
                 AddItemsToList(addProductRequests, amount, weightedItem, int.Parse(item.ID), item.ProductName);
 
             }
         }
-        private async Task<Tuple<bool,string>> AddProductsAsync(List<AddProductRequest> addProductRequests) 
+        private async Task<Tuple<bool, string>> AddProductsAsync(List<AddProductRequest> addProductRequests)
         {
             try
             {
-                _log.Info($"{nameof(AddProductsAsync)} attempting to add products using api.");
-               
-                HttpResponseMessage response = await _client.PostAsync($"api/Product/AddProducts",
-                          new StringContent(JsonConvert.SerializeObject(addProductRequests), System.Text.Encoding.Unicode, "application/json"));
-               
-                if (response.IsSuccessStatusCode)
+                var addRequests = await ValidateAddProductRequests(addProductRequests);
+                if (addRequests.Item1)
                 {
-                    string content = await response.Content.ReadAsStringAsync();
-                    if (!string.IsNullOrEmpty(content))
+                    if (addRequests.Item2 == null)
+                        return new Tuple<bool, string>(true, "the products all updated with latest values.");
+
+
+                    _log.Info($"{nameof(AddProductsAsync)} attempting to add products using api.");
+
+                    HttpResponseMessage response = await _client.PostAsync($"api/Product/AddProducts",
+                              new StringContent(JsonConvert.SerializeObject(addRequests.Item2), System.Text.Encoding.Unicode, "application/json"));
+
+                    if (response.IsSuccessStatusCode)
                     {
-                        var results = JsonConvert.DeserializeObject<AddProductResponse>(content);
-                        _log.Info($"{nameof(GetProductsAsync)} {results}.");
-                        return new Tuple<bool, string>(true, results.Result);
+                        string content = await response.Content.ReadAsStringAsync();
+                        if (!string.IsNullOrEmpty(content))
+                        {
+                            var results = JsonConvert.DeserializeObject<AddProductResponse>(content);
+                            _log.Info($"{nameof(GetProductsAsync)} {results}.");
+                            return new Tuple<bool, string>(true, results.Result);
+                        }
                     }
+                    return new Tuple<bool, string>(false, response.ReasonPhrase);
                 }
-                return new Tuple<bool, string>(false,response.ReasonPhrase);
+                else
+                {
+                    return new Tuple<bool, string>(false, "validations failed");
+                }
             }
             catch (Exception ex)
             {
@@ -308,5 +319,91 @@ namespace ManageStores.Implementations
                 return new Tuple<bool, string>(false, ex.Message);
             }
         }
+        private async Task<Tuple<bool, List<AddProductRequest>>> ValidateAddProductRequests(List<AddProductRequest> addProductRequests)
+        {
+            try
+            {
+                _log.Info($"{nameof(ValidateAddProductRequests)} attempting to validate api requests.");
+
+                var products = await GetProductsAsync();
+
+                if (products.Item1)
+                {
+                    if (products.Item3 == null)//No products on db.
+                        return new Tuple<bool, List<AddProductRequest>>(true, addProductRequests);
+
+                    var existingPrducts = new List<AddProductRequest>();
+                    var existingPrductsUpdateRequest = new List<UpdateProductRequest>();
+
+                    foreach (var product in products.Item3)
+                    {
+                        var request = addProductRequests.Where(a => a.ID == product.ID).FirstOrDefault();
+
+                        if (request != null)
+                        {
+                            existingPrducts.Add(request);
+                            existingPrductsUpdateRequest.Add(new UpdateProductRequest
+                            {
+                                ProductID = product.ID,
+                                ProductName = request.ProductName,
+                                ID = request.ID,
+                                SuggestedSellingPrice = request.SuggestedSellingPrice,
+                                WeightedItem = request.WeightedItem
+                            });
+                        }
+                    }
+
+                    if (existingPrducts?.Count() > 0)
+                    {
+                        _log.Info($"{nameof(ValidateAddProductRequests)} found {existingPrducts.Count()} existing products.");
+                        
+                        addProductRequests = addProductRequests.Except(existingPrducts).ToList();
+
+                        var update = await UpdateProductsAsync(existingPrductsUpdateRequest);
+
+                        if (addProductRequests.Count() == 0)
+                            return new Tuple<bool, List<AddProductRequest>>(true, null);
+                    }
+
+                }
+                return new Tuple<bool, List<AddProductRequest>>(true, addProductRequests);
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"{nameof(AddProductsAsync)} {ex.Message} {ex.StackTrace}.");
+                return new Tuple<bool, List<AddProductRequest>>(false, addProductRequests);
+            }
+        }
+
+        private async Task<Tuple<bool, string>> UpdateProductsAsync(List<UpdateProductRequest> updateRequest)
+        {
+            try
+            {
+                    _log.Info($"{nameof(AddProductsAsync)} attempting to update products using api.");
+
+                    HttpResponseMessage response = await _client.PutAsync($"api/Product/UpdateProducts",
+                              new StringContent(JsonConvert.SerializeObject(updateRequest), System.Text.Encoding.Unicode, "application/json"));
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string content = await response.Content.ReadAsStringAsync();
+                        if (!string.IsNullOrEmpty(content))
+                        {
+                            var results = JsonConvert.DeserializeObject<AddProductResponse>(content);
+                            _log.Info($"{nameof(GetProductsAsync)} {results}.");
+                            return new Tuple<bool, string>(true, results.Result);
+                        }
+                    }
+                    return new Tuple<bool, string>(false, response.ReasonPhrase);
+              
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"{nameof(AddProductsAsync)} {ex.Message} {ex.StackTrace}.");
+                return new Tuple<bool, string>(false, ex.Message);
+            }
+        }
+
+
     }
 }
