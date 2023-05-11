@@ -121,25 +121,29 @@ namespace ManageStores.Implementations
 
                 foreach (var line in lines)
                 {
+
                     string[] values = line.Split(',');
                     if (values.Length > 0)
                     {
-                        decimal? amount = null;
-                        bool? weightedItem = null;
-
                         Int32.TryParse(values[0].ToString(), out int id);
-                        string productName = values[1]?.ToString();
 
-                        if (!string.IsNullOrEmpty(values[3]))
+                        if (id > 0)
                         {
-                            decimal.TryParse(values[3]?.ToString().Replace(',', '.'), out decimal amnt);
-                            amount = amnt;
+                            decimal? amount = null;
+                            bool? weightedItem = null;
+                            string productName = values[1]?.ToString();
+
+                            if (!string.IsNullOrEmpty(values[3]))
+                            {
+                                decimal.TryParse(values[3]?.ToString().Replace(',', '.'), out decimal amnt);
+                                amount = amnt;
+                            }
+
+                            if (!string.IsNullOrEmpty(values[2]))
+                                weightedItem = values[2].ToLower().Equals("y") ? true : false;
+
+                            AddItemsToList(addProductRequests, amount, weightedItem, id, productName);
                         }
-
-                        if (!string.IsNullOrEmpty(values[2]))
-                            weightedItem = values[2].ToLower().Equals("y") ? true : false;
-
-                        AddItemsToList(addProductRequests, amount, weightedItem, id, productName);
                     }
                 }
             }
@@ -232,24 +236,24 @@ namespace ManageStores.Implementations
                     {
                         if (xmlReader.HasAttributes)
                         {
-
-                            decimal? amount = null;
-                            bool? weightedItem = null;
-
                             Int32.TryParse(xmlReader.GetAttribute("ID"), out int id);
-                            string productName = xmlReader.GetAttribute("Name");
-
-                            if (!string.IsNullOrEmpty(xmlReader.GetAttribute("SuggestedSellingPrice")))
+                            if (id > 0)
                             {
-                                decimal.TryParse(xmlReader.GetAttribute("SuggestedSellingPrice").ToString().Replace(',', '.'), out decimal amnt);
-                                amount = amnt;
+                                decimal? amount = null;
+                                bool? weightedItem = null;
+                                string productName = xmlReader.GetAttribute("Name");
+
+                                if (!string.IsNullOrEmpty(xmlReader.GetAttribute("SuggestedSellingPrice")))
+                                {
+                                    decimal.TryParse(xmlReader.GetAttribute("SuggestedSellingPrice").ToString().Replace(',', '.'), out decimal amnt);
+                                    amount = amnt;
+                                }
+
+                                if (!string.IsNullOrEmpty(xmlReader.GetAttribute("WeightedItem")))
+                                    weightedItem = xmlReader.GetAttribute("WeightedItem").ToLower().Equals("y") ? true : false;
+
+                                AddItemsToList(addProductRequests, amount, weightedItem, id, productName);
                             }
-
-                            if (!string.IsNullOrEmpty(xmlReader.GetAttribute("WeightedItem")))
-                                weightedItem = xmlReader.GetAttribute("WeightedItem").ToLower().Equals("y") ? true : false;
-
-                            AddItemsToList(addProductRequests, amount, weightedItem, id, productName);
-
                         }
                     }
                 }
@@ -265,19 +269,23 @@ namespace ManageStores.Implementations
         {
             foreach (var item in addProductRequestsJson)
             {
-                decimal? amount = null;
-                bool? weightedItem = null;
-                if (!string.IsNullOrEmpty(item.SuggestedSellingPrice))
+                Int32.TryParse(item.ID, out int id);
+
+                if (id > 0)
                 {
-                    decimal.TryParse(item.SuggestedSellingPrice.ToString().Replace(',', '.'), out decimal amnt);
-                    amount = amnt;
+                    decimal? amount = null;
+                    bool? weightedItem = null;
+                    if (!string.IsNullOrEmpty(item.SuggestedSellingPrice))
+                    {
+                        decimal.TryParse(item.SuggestedSellingPrice.ToString().Replace(',', '.'), out decimal amnt);
+                        amount = amnt;
+                    }
+
+                    if (!string.IsNullOrEmpty(item.WeightedItem))
+                        weightedItem = item.WeightedItem.ToLower().Equals("y") ? true : false;
+
+                    AddItemsToList(addProductRequests, amount, weightedItem, id, item.ProductName);
                 }
-
-                if (!string.IsNullOrEmpty(item.WeightedItem))
-                    weightedItem = item.WeightedItem.ToLower().Equals("y") ? true : false;
-
-                AddItemsToList(addProductRequests, amount, weightedItem, int.Parse(item.ID), item.ProductName);
-
             }
         }
         private async Task<Tuple<bool, string>> AddProductsAsync(List<AddProductRequest> addProductRequests)
@@ -374,7 +382,6 @@ namespace ManageStores.Implementations
                 return new Tuple<bool, List<AddProductRequest>>(false, addProductRequests);
             }
         }
-
         private async Task<Tuple<bool, string>> UpdateProductsAsync(List<UpdateProductRequest> updateRequest)
         {
             try

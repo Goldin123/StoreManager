@@ -34,4 +34,9 @@ namespace ManageStoresModel
         public int PID { get; set; }
         public bool Active { get; set; }
     }
+
+    public class StoreDetailResponse
+    {
+        public List<StoreDetail> Result { get; set; }
+    }
 }

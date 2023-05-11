@@ -153,7 +153,9 @@
     <Compile Include="Helpers\DropDownItems.cs" />
     <Compile Include="Helpers\SiteHelpers.cs" />
     <Compile Include="Implementations\ProductSite.cs" />
+    <Compile Include="Implementations\StoreSite.cs" />
     <Compile Include="Interfaces\IProductSite.cs" />
+    <Compile Include="Interfaces\IStoreSite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
