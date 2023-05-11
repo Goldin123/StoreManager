@@ -10,7 +10,7 @@
     <div class="container-fluid">
         <br />
         <div class="info-box">
-            <span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>
+            <span class="info-box-icon bg-info"><i class="far fa-bell" style="color: #eff0f0;"></i></span>
 
             <div class="info-box-content">
                 <span class="info-box-number">Information</span>
@@ -64,9 +64,9 @@
                                     <label>File Type</label>
                                     @Html.DropDownListFor(a => a.FileType, ManageStores.Helpers.DropDownItems.FileType(), new { @class = "custom-select", type = "text" })
                                     <span>
-                                        ( @Html.ActionLink("Download CSV Template", "Download",new { Id ="1"}) )
-                                        ( @Html.ActionLink("Download Json Template", "Download", new { Id = "2" }) )
-                                        ( @Html.ActionLink("Download XML Template", "Download", new { Id = "3" }) )
+                                        ( @Html.ActionLink("Download CSV Template", "DownloadTemplate", new { Id ="1"}) )
+                                        ( @Html.ActionLink("Download Json Template", "DownloadTemplate", new { Id = "2" }) )
+                                        ( @Html.ActionLink("Download XML Template", "DownloadTemplate", new { Id = "3" }) )
                                     </span>
                                 </div>
                                 <div class="form-group">
