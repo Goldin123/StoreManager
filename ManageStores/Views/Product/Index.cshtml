@@ -81,18 +81,13 @@
                         'Export.json'
                     );
                 }
-            },
+                },
                 {
                 text: 'XML',
-                action: function ( e, dt, button, config ) {
-                     $("#mytable").tabletoxml({
-                rootnode: "Products",
-                childnode: "Product",
-                filename: 'Product'
-            });
+                    action: function (e, dt, button, config) {
+                        alert('clicked');
+                    }
                 }
-            }
-
             ] 
         });
     });

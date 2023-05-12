@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
+using Unity.Injection;
 
 namespace ManageStores.Implementations
 {
@@ -71,7 +72,11 @@ namespace ManageStores.Implementations
                         {
                             _log.Info($"{nameof(AddProductFileAsync)} about to process csv file {productUpload.File.FileName}.");
                             var productRequest = ProcessCSVFile(fullFilePath);
-                            return await AddProductsAsync(productRequest);
+                            if (productRequest.Item1)
+                            {
+                                return await AddProductsAsync(productRequest.Item3);
+                            }else
+                                return new Tuple<bool, string> ( false, productRequest.Item2);
                         }
                         else
                             return FailedUploadDueToSelection(productUpload, fullFilePath);
@@ -112,37 +117,88 @@ namespace ManageStores.Implementations
             _log.Info($"{nameof(AddProductFileAsync)} attempting to add file {productUpload.File.FileName} failed, selection vs format do not match.");
             return new Tuple<bool, string>(false, $"File {productUpload.File.FileName} could not be uploaded, please the selection matches the file format.");
         }
-        private List<AddProductRequest> ProcessCSVFile(string fullFilePath)
+        private Tuple<bool,string, List<AddProductRequest>> ProcessCSVFile(string fullFilePath)
         {
             var addProductRequests = new List<AddProductRequest>();
+            bool success = true;
+            string message = string.Empty;
             try
             {
-                var lines = File.ReadAllLines(fullFilePath).Skip(1).ToList();
+                var header = File.ReadAllLines(fullFilePath).First();
+                string[] headers = header.Split(',');
 
-                foreach (var line in lines)
+                if (headers.Length == 0) 
                 {
-
-                    string[] values = line.Split(',');
-                    if (values.Length > 0)
+                    message = "No headers available, please use template";
+                    success = false;
+                    _log.Info($"{nameof(ProcessCSVFile)} {message}");
+                    return new Tuple<bool, string, List<AddProductRequest>>(success, header, addProductRequests);
+                }
+                else 
+                {
+                    if (!headers[0].ToString().Equals("ID")) 
                     {
-                        Int32.TryParse(values[0].ToString(), out int id);
+                        message = "No ID on file, please use template";
+                        success = false;
+                        _log.Info($"{nameof(ProcessCSVFile)} {message}");
 
-                        if (id > 0)
+                        return new Tuple<bool, string, List<AddProductRequest>>(success, header, addProductRequests);
+                    }
+                    if (!headers[1].ToString().Equals("Name"))
+                    {
+                        message = "No Name on file, please use template";
+                        success = false;
+                        _log.Info($"{nameof(ProcessCSVFile)} {message}");
+
+                        return new Tuple<bool, string, List<AddProductRequest>>(success, header, addProductRequests);
+                    }
+                    if (!headers[2].ToString().Equals("WeightedItem"))
+                    {
+                        message = "No WeightedItem on file, please use template";
+                        success = false;
+                        _log.Info($"{nameof(ProcessCSVFile)} {message}");
+
+                        return new Tuple<bool, string, List<AddProductRequest>>(success, header, addProductRequests);
+                    }
+                    if (!headers[3].ToString().Equals("SuggestedSellingPrice"))
+                    {
+                        message = "No SuggestedSellingPrice on file, please use template";
+                        success = false;
+                        _log.Info($"{nameof(ProcessCSVFile)} {message}");
+
+                        return new Tuple<bool, string, List<AddProductRequest>>(success, header, addProductRequests);
+                    }
+                }
+
+                if (success)
+                {
+                    var lines = File.ReadAllLines(fullFilePath).Skip(1).ToList();
+
+                    foreach (var line in lines)
+                    {
+
+                        string[] values = line.Split(',');
+                        if (values.Length > 0)
                         {
-                            decimal? amount = null;
-                            bool? weightedItem = null;
-                            string productName = values[1]?.ToString();
+                            Int32.TryParse(values[0].ToString(), out int id);
 
-                            if (!string.IsNullOrEmpty(values[3]))
+                            if (id > 0)
                             {
-                                decimal.TryParse(values[3]?.ToString().Replace(',', '.'), out decimal amnt);
-                                amount = amnt;
+                                decimal? amount = null;
+                                bool? weightedItem = null;
+                                string productName = values[1]?.ToString();
+
+                                if (!string.IsNullOrEmpty(values[3]))
+                                {
+                                    decimal.TryParse(values[3]?.ToString().Replace(',', '.'), out decimal amnt);
+                                    amount = amnt;
+                                }
+
+                                if (!string.IsNullOrEmpty(values[2]))
+                                    weightedItem = values[2].ToLower().Equals("y") ? true : false;
+
+                                AddItemsToList(addProductRequests, amount, weightedItem, id, productName);
                             }
-
-                            if (!string.IsNullOrEmpty(values[2]))
-                                weightedItem = values[2].ToLower().Equals("y") ? true : false;
-
-                            AddItemsToList(addProductRequests, amount, weightedItem, id, productName);
                         }
                     }
                 }
@@ -150,8 +206,9 @@ namespace ManageStores.Implementations
             catch (Exception ex)
             {
                 _log.Error($"{nameof(ProcessExcelFile)} {ex.Message} {ex.StackTrace}.");
+                return new Tuple<bool, string, List<AddProductRequest>>(false, ex.Message, addProductRequests);
             }
-            return addProductRequests;
+            return new Tuple<bool, string, List<AddProductRequest>>(success, message, addProductRequests);
         }
         private static void AddItemsToList(List<AddProductRequest> addProductRequests, decimal? amount, bool? weightedItem, int id, string productName)
         {
