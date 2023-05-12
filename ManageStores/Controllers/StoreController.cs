@@ -13,10 +13,12 @@ namespace ManageStores.Controllers
     public class StoreController : Controller
     {
         readonly IStoreSite _storeSite;
+        readonly IStoreProductSite _storeProductSite;
 
-        public StoreController(IStoreSite storeSite)
+        public StoreController(IStoreSite storeSite, IStoreProductSite storeProductSite)
         {
             _storeSite = storeSite;
+            _storeProductSite = storeProductSite;
         }
 
 
@@ -38,6 +40,29 @@ namespace ManageStores.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _storeSite.AddStoreFileAsync(stores);
+                if (result.Item1)
+                {
+                    TempData["UploadStatus"] = result.Item2;
+                }
+                else
+                {
+                    TempData["UploadError"] = result.Item2;
+                }
+            }
+            else
+            {
+                if (stores.File == null)
+                    TempData["UploadError"] = "Please select a file.";
+            }
+
+            return RedirectToAction("AddStores");
+        }
+
+        public async Task<ActionResult> AddStoresProductsToInventory(StoreUpload stores)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _storeProductSite.AddStoreProductFileAsync(stores);
                 if (result.Item1)
                 {
                     TempData["UploadStatus"] = result.Item2;

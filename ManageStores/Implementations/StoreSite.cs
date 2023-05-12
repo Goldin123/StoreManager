@@ -254,15 +254,15 @@ namespace ManageStores.Implementations
 
                     var existingStores = new List<AddStoresRequest>();
 
-                    foreach (var product in stores.Item3)
+                    foreach (var store in stores.Item3)
                     {
-                        var request = addStoresRequests.Where(a => a.ID == product.ID).FirstOrDefault();
+                        var request = addStoresRequests.Where(a => a.ID == store.ID).FirstOrDefault();
                        
                     }
 
                     if (existingStores?.Count() > 0)
                     {
-                        _log.Info($"{nameof(ValidateAddStoresRequests)} found {existingStores.Count()} existing products.");
+                        _log.Info($"{nameof(ValidateAddStoresRequests)} found {existingStores.Count()} existing stores.");
 
                         addStoresRequests = addStoresRequests.Except(existingStores).ToList();
 
@@ -293,7 +293,7 @@ namespace ManageStores.Implementations
                 {
                     addStoreRequestsJson = JsonConvert.DeserializeObject<List<AddStoresRequestJson>>(sr.ReadToEnd());
                 }
-                ConvertProductJsonToAddRequests(addStoreRequests, addStoreRequestsJson);
+                ConvertStoresJsonToAddRequests(addStoreRequests, addStoreRequestsJson);
                 return addStoreRequests;
             }
             catch (Exception ex)
@@ -344,7 +344,7 @@ namespace ManageStores.Implementations
                 return new Tuple<bool, string, List<AddStoresRequest>>(false, ex.Message, new List<AddStoresRequest>());
             }
         }
-        private static void ConvertProductJsonToAddRequests(List<AddStoresRequest> addStoreRequests, List<AddStoresRequestJson> addStoreRequestsJson)
+        private static void ConvertStoresJsonToAddRequests(List<AddStoresRequest> addStoreRequests, List<AddStoresRequestJson> addStoreRequestsJson)
         {
             foreach (var item in addStoreRequestsJson)
             {

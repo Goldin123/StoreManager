@@ -90,7 +90,7 @@ namespace ManageStoresData.Helpers
 
             return dt;
         }
-        public static DataTable CreateStoreProductTypeDataTable(List<ManageStoresModel.StoreProductModel> storesProducts)
+        public static DataTable CreateStoreProductTypeDataTable(List<ManageStoresModel.StoreProductRequest> storesProducts)
         {
             DataTable dt = new DataTable();
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace ManageStoresModel
         public DateTime OpenDate { get; set; }
     }
 
-    public class StoreProductModel 
+    public class StoreProductRequest 
     {
         public int SID { get; set; }
         public int PID { get; set; }
@@ -58,6 +59,7 @@ namespace ManageStoresModel
     public class AddStoresRequestJson
     {
         public string ID { get; set; }
+        [JsonProperty(PropertyName = "Name")]
         public string StoreName { get; set; }
         public string TelephoneNumber { get; set; }
         public string OpenDate { get; set; }
@@ -69,5 +71,28 @@ namespace ManageStoresModel
 
         [Required(ErrorMessage = "Please select file.")]
         public HttpPostedFileBase File { get; set; }
+    }
+
+    public class StoreProductDetail
+    {
+        public int SPID { get; set; }
+        public int SID { get; set; }
+        public int PID { get; set; }
+        public bool Active { get; set; }
+        public DateTime DateAdded { get; set; }
+        public DateTime DateUpdated { get; set; }
+    }
+
+    public class StoreProductDetailResponse
+    {
+        public List<StoreProductDetail> Result { get; set; }
+    }
+
+    public class AddStoresProductsRequestJson
+    {
+        [JsonProperty(PropertyName = "BranchID")]
+        public string SID { get; set; }
+        [JsonProperty(PropertyName = "ProductID")]
+        public string PID { get; set; }
     }
 }
