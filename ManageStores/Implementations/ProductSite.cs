@@ -53,7 +53,6 @@ namespace ManageStores.Implementations
         {
             try
             {
-
                 _log.Info($"{nameof(AddProductFileAsync)} attempting to add file {productUpload.File.FileName}.");
 
                 string fullFilePath = Path.Combine(ConfigurationManager.AppSettings["FileLocation"], $"{DateTime.Now.ToString("MMddyyyyHHmmssfff")}_{productUpload.File.FileName}");
@@ -73,9 +72,8 @@ namespace ManageStores.Implementations
                             _log.Info($"{nameof(AddProductFileAsync)} about to process csv file {productUpload.File.FileName}.");
                             var productRequest = ProcessCSVFile(fullFilePath);
                             if (productRequest.Item1)
-                            {
                                 return await AddProductsAsync(productRequest.Item3);
-                            }else
+                            else
                                 return new Tuple<bool, string> ( false, productRequest.Item2);
                         }
                         else
@@ -94,7 +92,10 @@ namespace ManageStores.Implementations
                         {
                             _log.Info($"{nameof(AddProductFileAsync)} about to process xml file {productUpload.File.FileName}.");
                             var productRequest = ProcessXmlFile(fullFilePath);
-                            return await AddProductsAsync(productRequest);
+                            if (productRequest.Item1)
+                                return await AddProductsAsync(productRequest.Item3);
+                            else
+                                return new Tuple<bool, string>(false, productRequest.Item2);
                         }
                         else
                             return FailedUploadDueToSelection(productUpload, fullFilePath);
@@ -114,7 +115,7 @@ namespace ManageStores.Implementations
         private static Tuple<bool, string> FailedUploadDueToSelection(ProductUpload productUpload, string fullFilePath)
         {
             File.Delete(fullFilePath);
-            _log.Info($"{nameof(AddProductFileAsync)} attempting to add file {productUpload.File.FileName} failed, selection vs format do not match.");
+            _log.Info($"{nameof(FailedUploadDueToSelection)} attempting to add file {productUpload.File.FileName} failed, selection vs format do not match.");
             return new Tuple<bool, string>(false, $"File {productUpload.File.FileName} could not be uploaded, please the selection matches the file format.");
         }
         private Tuple<bool,string, List<AddProductRequest>> ProcessCSVFile(string fullFilePath)
@@ -141,7 +142,6 @@ namespace ManageStores.Implementations
                         message = "No ID on file, please use template";
                         success = false;
                         _log.Info($"{nameof(ProcessCSVFile)} {message}");
-
                         return new Tuple<bool, string, List<AddProductRequest>>(success, header, addProductRequests);
                     }
                     if (!headers[1].ToString().Equals("Name"))
@@ -149,7 +149,6 @@ namespace ManageStores.Implementations
                         message = "No Name on file, please use template";
                         success = false;
                         _log.Info($"{nameof(ProcessCSVFile)} {message}");
-
                         return new Tuple<bool, string, List<AddProductRequest>>(success, header, addProductRequests);
                     }
                     if (!headers[2].ToString().Equals("WeightedItem"))
@@ -157,7 +156,6 @@ namespace ManageStores.Implementations
                         message = "No WeightedItem on file, please use template";
                         success = false;
                         _log.Info($"{nameof(ProcessCSVFile)} {message}");
-
                         return new Tuple<bool, string, List<AddProductRequest>>(success, header, addProductRequests);
                     }
                     if (!headers[3].ToString().Equals("SuggestedSellingPrice"))
@@ -165,7 +163,6 @@ namespace ManageStores.Implementations
                         message = "No SuggestedSellingPrice on file, please use template";
                         success = false;
                         _log.Info($"{nameof(ProcessCSVFile)} {message}");
-
                         return new Tuple<bool, string, List<AddProductRequest>>(success, header, addProductRequests);
                     }
                 }
@@ -205,7 +202,7 @@ namespace ManageStores.Implementations
             }
             catch (Exception ex)
             {
-                _log.Error($"{nameof(ProcessExcelFile)} {ex.Message} {ex.StackTrace}.");
+                _log.Error($"{nameof(ProcessCSVFile)} {ex.Message} {ex.StackTrace}.");
                 return new Tuple<bool, string, List<AddProductRequest>>(false, ex.Message, addProductRequests);
             }
             return new Tuple<bool, string, List<AddProductRequest>>(success, message, addProductRequests);
@@ -234,6 +231,8 @@ namespace ManageStores.Implementations
                         {
                             while (reader.Read())
                             {
+
+
                                 if (i > 0) //skip header
                                 {
                                     Int32.TryParse(reader.GetValue(0).ToString(), out int id);
@@ -277,15 +276,18 @@ namespace ManageStores.Implementations
             }
             catch (Exception ex)
             {
-                _log.Error($"{nameof(ProcessExcelFile)} {ex.Message} {ex.StackTrace}.");
+                _log.Error($"{nameof(ProcessJsonFile)} {ex.Message} {ex.StackTrace}.");
                 return new List<AddProductRequest>();
             }
         }
-        private List<AddProductRequest> ProcessXmlFile(string fullFilePath)
+        private Tuple<bool,string,List<AddProductRequest>> ProcessXmlFile(string fullFilePath)
         {
             try
             {
                 var addProductRequests = new List<AddProductRequest>();
+                bool success = true;
+                string message = string.Empty;
+
                 XmlReader xmlReader = XmlReader.Create(fullFilePath);
                 while (xmlReader.Read())
                 {
@@ -314,12 +316,12 @@ namespace ManageStores.Implementations
                         }
                     }
                 }
-                return addProductRequests;
+                return new Tuple<bool, string, List<AddProductRequest>>(success,message,addProductRequests);
             }
             catch (Exception ex)
             {
-                _log.Error($"{nameof(ProcessExcelFile)} {ex.Message} {ex.StackTrace}.");
-                return new List<AddProductRequest>();
+                _log.Error($"{nameof(ProcessXmlFile)} {ex.Message} {ex.StackTrace}.");
+                return new Tuple<bool, string, List<AddProductRequest>>(false,ex.Message,new List<AddProductRequest>());
             }
         }
         private static void ConvertProductJsonToAddRequests(List<AddProductRequest> addProductRequests, List<AddProductRequestJson> addProductRequestsJson)
@@ -367,7 +369,7 @@ namespace ManageStores.Implementations
                         if (!string.IsNullOrEmpty(content))
                         {
                             var results = JsonConvert.DeserializeObject<AddProductResponse>(content);
-                            _log.Info($"{nameof(GetProductsAsync)} {results}.");
+                            _log.Info($"{nameof(AddProductsAsync)} {results}.");
                             return new Tuple<bool, string>(true, results.Result);
                         }
                     }
@@ -435,7 +437,7 @@ namespace ManageStores.Implementations
             }
             catch (Exception ex)
             {
-                _log.Error($"{nameof(AddProductsAsync)} {ex.Message} {ex.StackTrace}.");
+                _log.Error($"{nameof(ValidateAddProductRequests)} {ex.Message} {ex.StackTrace}.");
                 return new Tuple<bool, List<AddProductRequest>>(false, addProductRequests);
             }
         }
@@ -454,7 +456,7 @@ namespace ManageStores.Implementations
                         if (!string.IsNullOrEmpty(content))
                         {
                             var results = JsonConvert.DeserializeObject<AddProductResponse>(content);
-                            _log.Info($"{nameof(GetProductsAsync)} {results}.");
+                            _log.Info($"{nameof(UpdateProductsAsync)} {results}.");
                             return new Tuple<bool, string>(true, results.Result);
                         }
                     }

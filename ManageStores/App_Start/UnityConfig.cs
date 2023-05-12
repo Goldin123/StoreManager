@@ -12,6 +12,7 @@ namespace ManageStores
         {
 			var container = new UnityContainer();
             container.RegisterType<IProductSite, ProductSite>();
+            container.RegisterType<IStoreSite, StoreSite>();
             // register all your components with the container here
             // it is NOT necessary to register your controllers
 

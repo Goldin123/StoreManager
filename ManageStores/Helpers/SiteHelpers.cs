@@ -13,5 +13,6 @@ namespace ManageStores.Helpers
             var obj = JsonConvert.DeserializeObject<List<T>>(SerializedJSONString);
             return obj;
         }
+
     }
 }

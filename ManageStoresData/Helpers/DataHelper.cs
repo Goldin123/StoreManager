@@ -83,7 +83,7 @@ namespace ManageStoresData.Helpers
                     item.ID,
                     item.StoreName,
                     item.TelephoneNumber,
-                    item.OpenDate,
+                    item.OpenDate.Date,
                     DateTime.Now,
                     DateTime.Now);
             }

@@ -1,8 +1,67 @@
-﻿
+﻿@model List<ManageStoresModel.StoreDetail>
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Internal.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Stores &nbsp;&nbsp;</h2>
+<section class="content">
+    <div class="container-fluid">
+        <br />
+        <div class="row">
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">List of Stores</h3>
+                    </div>
+                    <div class="card-body">
+                        <table id="storesTable" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Store Name</th>
+                                    <th>Telephone Number</th>
+                                    <th>Open Date</th>
+                                    <th>Number Of Products</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @if (Model.Count > 0)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.ID</td>
+                                            <td>@item.StoreName</td>
+                                            <td>@item.TelephoneNumber</td>
+                                            <td>@item.OpenDate</td>
+                                            <td>@item.NumberOfProducts</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="card-footer">
+                        @Html.ActionLink("Add Stores", "AddStores", "Store", new object { }, new { @class = "btn btn-warning" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
 

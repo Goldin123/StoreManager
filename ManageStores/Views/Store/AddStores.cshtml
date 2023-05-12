@@ -1,22 +1,21 @@
-﻿@model ManageStoresModel.ProductUpload
+﻿@model ManageStoresModel.StoreUpload
+
 @{
-    ViewBag.Title = "AddProduct";
+    ViewBag.Title = "AddStores";
     Layout = "~/Views/Shared/_Internal.cshtml";
 }
 
-<h2>Products &nbsp;&nbsp;</h2>
-
+<h2>Stores &nbsp;&nbsp;</h2>
 <section class="content">
     <div class="container-fluid">
         <br />
         <div class="info-box">
             <span class="info-box-icon bg-info"><i class="far fa-bell" style="color: #eff0f0;"></i></span>
             <div class="info-box-content">
-                <span class="info-box-number">Products Information</span>
+                <span class="info-box-number">Stores Information</span>
                 <span class="info-box-text">Please make sure you select the correct file type depending on the file you are uploading.</span>
                 <span class="info-box-text">Only <b>CSV</b>, <b>Json</b> and <b>XML</b> file types are allowed.</span>
                 <span class="info-box-text">Make use of the template to verify the file structures.</span>
-                <span class="info-box-text">Any Duplicate ID entries will be treated as updates to existing products.</span>
             </div>
             <!-- /.info-box-content -->
         </div>
@@ -49,21 +48,21 @@
         <br />
         <div class="row">
             <div>
-                @using (Html.BeginForm("AddProductToInventory", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                @using (Html.BeginForm("AddStoresToInventory", "Store", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
                     @Html.AntiForgeryToken();
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Add Products</h3>
+                            <h3 class="card-title">Add Stores</h3>
                         </div>
                         <div class="card-body">
                             <div>
-                                 
+
                                 <div class="form-group">
                                     <label>File Type</label>
                                     @Html.DropDownListFor(a => a.FileType, ManageStores.Helpers.DropDownItems.FileType(), new { @class = "custom-select", type = "text" })
                                     <span>
-                                        ( @Html.ActionLink("Download CSV Template", "DownloadTemplate", new { Id ="1"}) )
+                                        ( @Html.ActionLink("Download CSV Template", "DownloadTemplate", new { Id = "1" }) )
                                         ( @Html.ActionLink("Download Json Template", "DownloadTemplate", new { Id = "2" }) )
                                         ( @Html.ActionLink("Download XML Template", "DownloadTemplate", new { Id = "3" }) )
                                     </span>
@@ -76,13 +75,12 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button class="btn btn-primary" type="submit">Submit</button>&nbsp;&nbsp; @Html.ActionLink("View Products", "Index", "Product", new object { }, new { @class = "btn btn-warning" })
+                            <button class="btn btn-primary" type="submit">Submit</button>&nbsp;&nbsp; @Html.ActionLink("View Stores", "Index", "Store", new object { }, new { @class = "btn btn-warning" })
                         </div>
                     </div>
                 }
             </div>
         </div>
+
     </div>
 </section>
-
-

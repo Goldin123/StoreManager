@@ -30,11 +30,7 @@ namespace ManageStores.Controllers
             return View(new List<ProductDetail>());
         }
 
-        public async Task<ActionResult> AddProduct()
-        {
-           
-            return View(new ProductUpload());
-        }
+        public async Task<ActionResult> AddProduct() => View(new ProductUpload());
 
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddProductToInventory(ProductUpload product)
