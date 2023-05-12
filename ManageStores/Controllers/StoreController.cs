@@ -12,15 +12,16 @@ namespace ManageStores.Controllers
 {
     public class StoreController : Controller
     {
+        readonly IProductSite _productSite;
         readonly IStoreSite _storeSite;
         readonly IStoreProductSite _storeProductSite;
 
-        public StoreController(IStoreSite storeSite, IStoreProductSite storeProductSite)
+        public StoreController( IStoreSite storeSite, IStoreProductSite storeProductSite, IProductSite productSite)
         {
             _storeSite = storeSite;
             _storeProductSite = storeProductSite;
+            _productSite = productSite;
         }
-
 
         // GET: Store
         public async Task<ActionResult> Index()

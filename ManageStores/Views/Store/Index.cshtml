@@ -65,3 +65,33 @@
     </div>
 </section>
 
+<script>
+    $(document).ready(function () {
+        $('#storesTable').DataTable({
+            dom: 'Blfrtip',
+            buttons: [
+
+                {
+                    extend: 'csv',
+                },
+                {
+                text: 'Json',
+                action: function ( e, dt, button, config ) {
+                    var data = dt.buttons.exportData();
+                    $.fn.dataTable.fileSave(
+                        new Blob( [ JSON.stringify( data ) ] ),
+                        'Export.json'
+                    );
+                }
+                },
+                {
+                text: 'XML',
+                    action: function (e, dt, button, config) {
+                        //alert('clicked');
+                    }
+                }
+            ]
+        });
+    });
+
+</script>

@@ -18,6 +18,12 @@ namespace ManageStores.Implementations
     {
         private readonly HttpClient _client = Helpers.ApiHttpClient.GetApiClient();
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        readonly IStoreProductSite _storeProductSite ;
+        public StoreSite(IStoreProductSite storeProductSite ) 
+        {
+            _storeProductSite = storeProductSite;
+        }
+
         public async Task<Tuple<bool, string, List<StoreDetail>>> GetStoresAsync()
         {
             try
@@ -29,9 +35,13 @@ namespace ManageStores.Implementations
                     string content = await response.Content.ReadAsStringAsync();
                     if (!string.IsNullOrEmpty(content))
                     {
-                        var products = JsonConvert.DeserializeObject<StoreDetailResponse>(content);
-                        _log.Info($"{nameof(GetStoresAsync)} successfully returned {products.Result.Count()} stores(s) from api.");
-                        return new Tuple<bool, string, List<StoreDetail>>(true, "successful", products.Result);
+                        var stores = JsonConvert.DeserializeObject<StoreDetailResponse>(content);
+                        _log.Info($"{nameof(GetStoresAsync)} successfully returned {stores.Result.Count()} stores(s) from api.");
+
+                        if (stores.Result.Count() > 0)
+                            stores.Result =  await SetStoresProductCounts(stores.Result);
+
+                        return new Tuple<bool, string, List<StoreDetail>>(true, "successful", stores.Result);
                     }
                 }
                 _log.Info($"{nameof(GetStoresAsync)} no stores found from api.");
@@ -364,6 +374,26 @@ namespace ManageStores.Implementations
                 }
             }
         }
+        private async Task<List<StoreDetail>> SetStoresProductCounts(List<StoreDetail> storeDetails)
+        {
+            try 
+            {
+                var storesProducts = await _storeProductSite.GetStoresProductsAsync();
 
+                if (!storesProducts.Item1)
+                    return storeDetails;
+                if (storesProducts.Item3 == null)
+                    return storeDetails;
+
+                foreach(var store in storeDetails) 
+                    store.NumberOfProducts = storesProducts.Item3.Where(a => a.SID == store.ID).Count();
+
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"{nameof(SetStoresProductCounts)} {ex.Message} {ex.StackTrace}.");
+            }
+            return storeDetails;
+        }
     }
 }

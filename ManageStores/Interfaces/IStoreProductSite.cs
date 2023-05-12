@@ -9,6 +9,7 @@ namespace ManageStores.Interfaces
 {
     public interface IStoreProductSite
     {
+        Task<Tuple<bool, string, List<StoreProductDetail>>> GetStoresProductsAsync();
         Task<Tuple<bool, string>> AddStoreProductFileAsync(StoreUpload storeUpload);
     }
 }
