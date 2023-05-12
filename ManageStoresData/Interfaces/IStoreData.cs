@@ -12,6 +12,7 @@ namespace ManageStoresData.Interfaces
         Task<List<StoreDetail>> GetStoresAsync();
         Task<StoreDetail> GetStoreByIdAsync(int Id);
         Task<string> AddStoresAsync(List<AddStoresRequest> stores);
-        Task<string> AddStoresProductsAsync(List<StoreProduct> storesProducts);
+        Task<string> AddStoresProductsAsync(List<StoreProductRequest> storesProducts);
+        Task<List<StoreProductDetail>> GetStoreProductsAsync();
     }
 }

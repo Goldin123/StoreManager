@@ -61,6 +61,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DB\ApiUser.cs">
+      <DependentUpon>FoodLovers.tt</DependentUpon>
+    </Compile>
     <Compile Include="DB\FoodLovers.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -81,6 +84,9 @@
       <DependentUpon>FoodLovers.tt</DependentUpon>
     </Compile>
     <Compile Include="DB\Store.cs">
+      <DependentUpon>FoodLovers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\StoreProduct.cs">
       <DependentUpon>FoodLovers.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DataHelper.cs" />

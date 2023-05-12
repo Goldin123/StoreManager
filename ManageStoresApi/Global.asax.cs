@@ -1,5 +1,4 @@
 ﻿using log4net;
-using ManageStoresApi.App_Start;
 using ManageStoresApi.Controllers;
 using System;
 using System.Collections.Generic;

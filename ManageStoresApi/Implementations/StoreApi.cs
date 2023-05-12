@@ -61,7 +61,7 @@ namespace ManageStoresApi.Implementations
             }
         }
 
-        public async Task<string> AddStoresProductsAsync(List<StoreProduct> storesProducts)
+        public async Task<string> AddStoresProductsAsync(List<StoreProductRequest> storesProducts)
         {
             try
             {
@@ -73,8 +73,19 @@ namespace ManageStoresApi.Implementations
                 return ex.Message;
             }
         }
+        public async Task<List<StoreProductDetail>> GetStoresProductsAsync()
+        {
+            try
+            {
+                return await _storeData.GetStoreProductsAsync();
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"{nameof(GetStoresAsync)} {ex.Message} {ex.StackTrace}.");
+                return new List<StoreProductDetail>();
+            }
+        }
 
-        
 
     }
 }

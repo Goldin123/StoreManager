@@ -1,0 +1,103 @@
+﻿@model List<ManageStoresModel.ProductDetail>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Internal.cshtml";
+}
+
+<h2>Products &nbsp;&nbsp;</h2>
+<section class="content">
+    <div class="container-fluid">
+        <br />
+        <div class="row">
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">List of Products</h3>
+                    </div>
+                    <div class="card-body">
+                        <table id="productsTable" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product Name</th>
+                                    <th>Weighted Item</th>
+                                    <th>Suggested Selling Price</th>
+                                    <th>Date Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @if (Model.Count > 0)
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.ID</td>
+                                            <td>@item.ProductName</td>
+                                            <td>@item.WeightedItem</td>
+                                            <td>@String.Format("{0:c}", (item.SuggestedSellingPrice))</td>
+                                            <td>@item.DateUpdated</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="card-footer">
+                        @Html.ActionLink("Add Products", "AddProduct", "Product", new object { }, new { @class = "btn btn-warning" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<script>
+    $(document).ready(function () {
+        $('#productsTable').DataTable({
+            dom: 'Blfrtip',
+            buttons: [
+
+                {
+                    extend: 'csv',
+                },
+                {
+                text: 'Json',
+                action: function ( e, dt, button, config ) {
+                    var data = dt.buttons.exportData();
+                    $.fn.dataTable.fileSave(
+                        new Blob( [ JSON.stringify( data ) ] ),
+                        'Export.json'
+                    );
+                }
+                },
+                {
+                text: 'XML',
+                    action: function (e, dt, button, config) {
+                        alert('clicked');
+                    }
+                }
+            ] 
+        });
+    });
+
+    function xmlDownload(){
+        $("#productsTable").tabletoxml({
+                rootnode: "Products",
+                childnode: "Product",
+                filename: 'Product'
+            });
+          
+    }
+</script>

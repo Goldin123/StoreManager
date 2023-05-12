@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width" />
@@ -15,8 +16,27 @@
     <link href="~/Content/dist/css/adminlte.min.css" rel="stylesheet" />
 
     <link href="~/Content/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+    <!-- jQuery -->
+    <script src="~/Content/plugins/jquery/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+    <script src="~/Content/plugins/xml-js.min.js"></script>
+    <script src="~/Content/plugins/jquery.tabletoxml.js"></script>
 </head>
+
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <style>
+        .card-body {
+            width: 900px
+        }
+    </style>
     <div class="wrapper">
 
         <!-- Preloader -->
@@ -60,8 +80,8 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item menu-open" role="presentation">
-                            <a href="@Url.Action("Index","Products")" class="nav-link " role="menuitem">
+                        <li class="nav-item" role="presentation">
+                            <a href="@Url.Action("Index","Product")" class="nav-link" role="menuitem">
                                 <i class="nav-icon fas fa-list-alt"></i>
                                 <p>
                                     Products
@@ -70,7 +90,7 @@
                             </a>
                             <ul class="nav nav-treeview" role="presentation">
                                 <li class="nav-item" role="presentation">
-                                    <a href="@Url.Action("Index","Products")" class="nav-link" role="menuitem">
+                                    <a href="@Url.Action("Index","Product")" class="nav-link" role="menuitem">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             View
@@ -79,7 +99,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a href="@Url.Action("AddProduct","Products")" class="nav-link" role="menuitem">
+                                    <a href="@Url.Action("AddProduct","Product")" class="nav-link" role="menuitem">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Add</p>
                                     </a>
@@ -88,7 +108,7 @@
                             </ul>
                         </li>
                         <li class="nav-item " role="presentation">
-                            <a href="@Url.Action("Index","Products")" class="nav-link " role="menuitem">
+                            <a href="@Url.Action("Index","Store")" class="nav-link " role="menuitem">
                                 <i class="nav-icon fas fa-building"></i>
                                 <p>
                                     Stores
@@ -97,7 +117,7 @@
                             </a>
                             <ul class="nav nav-treeview" role="presentation">
                                 <li class="nav-item" role="presentation">
-                                    <a href="@Url.Action("Index","Products")" class="nav-link" role="menuitem">
+                                    <a href="@Url.Action("Index","Store")" class="nav-link" role="menuitem">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             Manage
@@ -106,7 +126,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a href="@Url.Action("AddProduct","Products")" class="nav-link" role="menuitem">
+                                    <a href="@Url.Action("AddStore","Store")" class="nav-link" role="menuitem">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Add</p>
                                     </a>
@@ -118,8 +138,8 @@
                             <a href="@Url.Action("about","Home")" class="nav-link" role="menuitem">
                                 <i class="nav-icon fas fa-calendar"></i>
                                 <p>
-                                   History
-                                    
+                                    History
+
                                 </p>
                             </a>
                         </li>
@@ -170,15 +190,11 @@
     </div>
     <!-- ./wrapper -->
     <!-- REQUIRED SCRIPTS -->
-    <!-- jQuery -->
-    <script src="~/Content/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap -->
     <script src="~/Content/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-
-    <script src="~/Content/plugins/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="~/Content/plugins/jquery.validate.min.js"></script>
-    <script src="~/Content/plugins/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Content/plugins/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Content/plugins/jquery.validate.js"></script>
+    <script src="~/Content/plugins/jquery.validate.unobtrusive.js"></script>
     <!-- overlayScrollbars -->
     <script src="~/Content/plugins/overlayScrollbars/js/OverlayScrollbars.min.js"></script>
 

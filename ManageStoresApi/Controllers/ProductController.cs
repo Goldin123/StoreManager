@@ -1,4 +1,5 @@
-﻿using ManageStoresApi.Implementations;
+﻿using ManageStoresApi.Helpers;
+using ManageStoresApi.Implementations;
 using ManageStoresApi.Interfaces;
 using ManageStoresData.Implementations;
 using ManageStoresData.Interfaces;
@@ -24,6 +25,7 @@ namespace ManageStoresApi.Controllers
       
         [Route("api/Product/GetProducts")]
         [HttpGet]
+
         public IHttpActionResult GetProducts()
         {
             try

@@ -5,6 +5,14 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="FoodLoversModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ApiUser">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="50" />
+          <Property Name="Password" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Product">
           <Key>
             <PropertyRef Name="PID" />
@@ -30,9 +38,22 @@
           <Property Name="DateAdded" Type="datetime" />
           <Property Name="DateUpdated" Type="datetime" />
         </EntityType>
+        <EntityType Name="StoreProduct">
+          <Key>
+            <PropertyRef Name="SPID" />
+          </Key>
+          <Property Name="SPID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SID" Type="int" />
+          <Property Name="PID" Type="int" />
+          <Property Name="Active" Type="bit" />
+          <Property Name="DateAdded" Type="datetime" />
+          <Property Name="DateUpdated" Type="datetime" />
+        </EntityType>
         <EntityContainer Name="FoodLoversModelStoreContainer">
+          <EntitySet Name="ApiUser" EntityType="Self.ApiUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Store" EntityType="Self.Store" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StoreProduct" EntityType="Self.StoreProduct" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -54,6 +75,8 @@
         <EntityContainer Name="FoodLoversEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="Stores" EntityType="FoodLoversModel.Store" />
+          <EntitySet Name="ApiUsers" EntityType="FoodLoversModel.ApiUser" />
+          <EntitySet Name="StoreProducts" EntityType="FoodLoversModel.StoreProduct" />
         </EntityContainer>
         <EntityType Name="Store">
           <Key>
@@ -64,6 +87,25 @@
           <Property Name="StoreName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="TelephoneNumber" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="OpenDate" Type="DateTime" Precision="3" />
+          <Property Name="DateAdded" Type="DateTime" Precision="3" />
+          <Property Name="DateUpdated" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="ApiUser">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="StoreProduct">
+          <Key>
+            <PropertyRef Name="SPID" />
+          </Key>
+          <Property Name="SPID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SID" Type="Int32" />
+          <Property Name="PID" Type="Int32" />
+          <Property Name="Active" Type="Boolean" />
           <Property Name="DateAdded" Type="DateTime" Precision="3" />
           <Property Name="DateUpdated" Type="DateTime" Precision="3" />
         </EntityType>
@@ -97,6 +139,27 @@
                 <ScalarProperty Name="StoreName" ColumnName="StoreName" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="SID" ColumnName="SID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ApiUsers">
+            <EntityTypeMapping TypeName="FoodLoversModel.ApiUser">
+              <MappingFragment StoreEntitySet="ApiUser">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StoreProducts">
+            <EntityTypeMapping TypeName="FoodLoversModel.StoreProduct">
+              <MappingFragment StoreEntitySet="StoreProduct">
+                <ScalarProperty Name="DateUpdated" ColumnName="DateUpdated" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="PID" ColumnName="PID" />
+                <ScalarProperty Name="SID" ColumnName="SID" />
+                <ScalarProperty Name="SPID" ColumnName="SPID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

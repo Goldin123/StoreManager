@@ -61,10 +61,24 @@ namespace ManageStoresApi.Controllers
                 return BadRequest();
             }
         }
+        [Route("api/Store/GetStoresProducts")]
+        [HttpGet]
+        public IHttpActionResult GetStoresProducts()
+        {
+            try
+            {
+                return Ok(_storeApi.GetStoresProductsAsync());
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
 
         [Route("api/Store/AddStoresProducts")]
         [HttpPost]
-        public IHttpActionResult AddStores([FromBody] List<StoreProduct> storesProducts)
+        public IHttpActionResult AddStores([FromBody] List<StoreProductRequest> storesProducts)
         {
             try
             {

@@ -118,7 +118,7 @@ namespace ManageStoresData.Implementations
                 return ex.Message;
             }
         }
-        public async Task<string> AddStoresProductsAsync(List<StoreProduct> storesProducts) 
+        public async Task<string> AddStoresProductsAsync(List<StoreProductRequest> storesProducts) 
         {
             try
             {
@@ -143,6 +143,41 @@ namespace ManageStoresData.Implementations
                 _log.Error($"{nameof(AddStoresProductsAsync)} {ex.Message} {ex.StackTrace}.");
                 return ex.Message;
             }
+        }
+
+        public async Task<List<StoreProductDetail>> GetStoreProductsAsync() 
+        {
+            try
+            {
+                _log.Info($"{nameof(GetStoresAsync)} attempting to get stores and product.");
+
+                using (var context = new FoodLoversEntities())
+                {
+                    var products = context.StoreProducts.AsQueryable();
+
+                    var lst = (from a in products
+                               select new ManageStoresModel.StoreProductDetail
+                               {
+                                  SPID = a.SPID,
+                                  Active = (bool)a.Active,
+                                  SID = (int)a.SID,
+                                  PID = (int)a.PID,
+                                  DateAdded = (DateTime)a.DateAdded,
+                                  DateUpdated = (DateTime)a.DateUpdated
+
+                               }).ToList();
+
+                    _log.Info($"{nameof(GetStoresAsync)} successfully returned {lst.Count()} store(s).");
+                    return lst;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"{nameof(GetStoreProductsAsync)} {ex.Message} {ex.StackTrace}.");
+                return new List<ManageStoresModel.StoreProductDetail>();
+            }
+
         }
     }
 }

@@ -27,5 +27,7 @@ namespace ManageStoresData.DB
     
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Store> Stores { get; set; }
+        public virtual DbSet<ApiUser> ApiUsers { get; set; }
+        public virtual DbSet<StoreProduct> StoreProducts { get; set; }
     }
 }
