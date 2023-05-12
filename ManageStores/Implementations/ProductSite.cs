@@ -396,7 +396,7 @@ namespace ManageStores.Implementations
 
                 if (products.Item1)
                 {
-                    if (products.Item3 == null)//No products on db.
+                    if (products.Item3?.Count() ==0)//No products on db.
                         return new Tuple<bool, List<AddProductRequest>>(true, addProductRequests);
 
                     var existingPrducts = new List<AddProductRequest>();

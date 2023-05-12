@@ -160,7 +160,7 @@ namespace ManageStoresData.Implementations
                                {
                                   SPID = a.SPID,
                                   Active = (bool)a.Active,
-                                  SID = a.SPID,
+                                  SID = (int)a.SID,
                                   PID = (int)a.PID,
                                   DateAdded = (DateTime)a.DateAdded,
                                   DateUpdated = (DateTime)a.DateUpdated

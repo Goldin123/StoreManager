@@ -259,7 +259,7 @@ namespace ManageStores.Implementations
 
                 if (stores.Item1)
                 {
-                    if (stores.Item3 == null)//No stores on db.
+                    if (stores.Item3?.Count() == 0)//No stores on db.
                         return new Tuple<bool, List<AddStoresRequest>>(true, addStoresRequests);
 
                     var existingStores = new List<AddStoresRequest>();

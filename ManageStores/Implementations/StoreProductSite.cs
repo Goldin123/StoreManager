@@ -193,7 +193,7 @@ namespace ManageStores.Implementations
                         return new Tuple<bool, string>(true, "the stores and product all updated with latest values.");
 
 
-                    _log.Info($"{nameof(AddStoresProductsAsync)} attempting to add stores using api.");
+                    _log.Info($"{nameof(AddStoresProductsAsync)} attempting to add stores and products using api.");
 
                     HttpResponseMessage response = await _client.PostAsync($"api/Store/AddStoresProducts",
                               new StringContent(JsonConvert.SerializeObject(addRequests.Item2), System.Text.Encoding.Unicode, "application/json"));
@@ -232,7 +232,7 @@ namespace ManageStores.Implementations
 
                 if (storesProducts.Item1)
                 {
-                    if (storesProducts.Item3 == null)//No stores and products on db.
+                    if (storesProducts.Item3?.Count()==0)//No stores and products on db.
                         return new Tuple<bool, List<StoreProductRequest>>(true, storesProductsRequests);
 
                     var existingStores = new List<StoreProductRequest>();
