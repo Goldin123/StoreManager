@@ -56,5 +56,7 @@ namespace ManageStores.Controllers
             return RedirectToAction("AddStores");
         }
 
+
+        public async Task<ActionResult> AddStoresProducts() => View(new StoreProductUpload());
     }
 }

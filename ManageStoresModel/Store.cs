@@ -62,4 +62,12 @@ namespace ManageStoresModel
         public string TelephoneNumber { get; set; }
         public string OpenDate { get; set; }
     }
+
+    public class StoreProductUpload
+    {
+        public int FileType { get; set; }
+
+        [Required(ErrorMessage = "Please select file.")]
+        public HttpPostedFileBase File { get; set; }
+    }
 }
