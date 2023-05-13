@@ -10,5 +10,8 @@
 <h4>Preview</h4>
 <p >Below is an image that shows a snippet on the excepeted output once the application is running..</P>
 
-![alt text](https://user-images.githubusercontent.com/17449653/233584275-49da40eb-cfae-4512-b8a9-9a9ff2e6537f.png)
+website
+![alt text](https://github.com/Goldin123/StoreManager/assets/17449653/ef06bd4d-fa01-40aa-a795-e5d9c1e864d1)
 
+Api
+![alt text](https://github.com/Goldin123/StoreManager/assets/17449653/74f81f72-ad27-4113-82fa-d91d3be170d4)
