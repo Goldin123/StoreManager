@@ -1,8 +1,10 @@
-﻿using ManageStoresData.DB;
+﻿using log4net;
+using ManageStoresData.DB;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +12,8 @@ namespace ManageStoresData.Helpers
 {
     public static class DataHelper
     {
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         public static DataTable CreateProductTypeDataTable(List<ManageStoresModel.UpdateProductRequest> products)
         {
             DataTable dt = new DataTable();
@@ -114,10 +118,20 @@ namespace ManageStoresData.Helpers
         }
         public static bool ValidateApiUser(string username, string password)
         {
-            using (var context = new FoodLoversEntities())
+            try 
             {
-                return context.ApiUsers.Where(u => u.Username == username && u.Password == password).Count() > 0;
+                using (var context = new FoodLoversEntities())
+                {
+                    return context.ApiUsers.Where(u => u.Username == username && u.Password == password).Count() > 0;
+                }
+
+            } catch (Exception ex) 
+            {
+                _log.Error($"{nameof(ValidateApiUser)} {ex.Message} {ex.StackTrace}.");
+
+                return false;
             }
+      
         }
     }
 }
