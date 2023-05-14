@@ -28,5 +28,5 @@ Api
   <li>No swagger on api? <br/>
     On the api properties, add the start up url to be http://localhost:44341/swagger</li>
   <li>Could not find a part of the path ... bin\roslyn\csc.exe?<br/>
-    Run "Update-Package Microsoft.CodeDom.Providers.DotNetCompilerPlatform -r"</li>
+    Run "Update-Package Microsoft.CodeDom.Providers.DotNetCompilerPlatform -r" on Package Manager Console</li>
 </ul>
