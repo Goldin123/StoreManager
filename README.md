@@ -3,13 +3,15 @@
 <p>This is a project that uploads products and store with diffrent files typres formats.</P>
 <h4>Getting started.</h4>
 <ul>
-  <li>This is a C# ASP.NET MVC Framework 4.7.2 application plus bootstrap front-end, with an API (asp.net mvc framework 4.7.2) and a MS SQL database. Make sure the correct SDK is installed.</li>
-  <li>Create a MS SQL database called 'FoodLovers' on local machine and then run the SQL Script file on folder ManageStores\ManageStoresData\SQL\Run Me First.sql.</li> 
-  <li>This application starts both the API and Website, make you are on the website to do uploads.</li>
+  <li>This is a C# ASP.NET MVC Framework 4.7.2 application plus bootstrap front-end, with an API (asp.net mvc framework 4.7.2) and a MS SQL database connected via Enitity Framework. <b>Make sure the correct SDK is installed</b>.</li>
+  <li><b><u>NOTE:</u></b> Create a MS SQL database called 'FoodLovers' on local machine and then run the SQL Script file on folder ManageStores\ManageStoresData\SQL\Run Me First.sql.</li> 
+  <li>This application starts both the API and Website, make you are on the website to do uploads. Refer to the solution properties below.</li>
+  <li>Logs can be located on (C:\logs\ManageStores)</li>
+  <li>File back-ups are located on (C:\ManageStoresFiles)</li>
 </ul>
 <h4>Preview</h4>
 <p >Below is an image that shows a snippet on the excepeted output once the application is running..</P>
-Solution properties must be like below
+<h3>Solution properties must be like below</h3>
 
 ![alt text](https://github.com/Goldin123/StoreManager/assets/17449653/2ed3b67f-edbc-4c2f-8061-7c4c86e680a5)
 
