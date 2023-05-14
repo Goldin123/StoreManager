@@ -3,7 +3,7 @@
 <p>This is a project that uploads products and store with diffrent files typres formats.</P>
 <h4>Getting started.</h4>
 <ul>
-  <li>This is a C# MVC .net framework 4.7.2 application with an API and a SQL database. Make sure the correct SDK is installed.</li>
+  <li>This is a C# ASP.NET MVC Framework 4.7.2 application plus bootstrap front-end, with an API (asp.net mvc framework 4.7.2) and a MS SQL database. Make sure the correct SDK is installed.</li>
   <li>Create a MS SQL database called 'FoodLovers' on local machine and then run the SQL Script file on folder ManageStores\ManageStoresData\SQL\Run Me First.sql.</li> 
   <li>This application starts both the API and Website, make you are on the website to do uploads.</li>
 </ul>
