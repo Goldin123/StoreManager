@@ -1,7 +1,7 @@
 <h1 align="center">Hi 👋, I'm Goldin Nyiko Baloyi</h1>
 <h3 align="center">(A passionate full-stack developer from Sandton [SA])</h3>
 <p>This is a project that uploads products and store with diffrent files typres formats.</P>
-<h4>Getting started..</h4>
+<h4>Getting started.</h4>
 <ul>
   <li>This is a C# MVC .net framework 4.7.2 application with an API and a SQL database. Make sure the correct SDK is installed.</li>
   <li>Create a MS SQL database called 'FoodLovers' on local machine and then run the SQL Script file on folder ManageStores\ManageStoresData\SQL\Run Me First.sql.</li> 
@@ -19,3 +19,14 @@ website
 
 Api
 ![alt text](https://github.com/Goldin123/StoreManager/assets/17449653/74f81f72-ad27-4113-82fa-d91d3be170d4)
+
+<h4>Known Issues.</h4>
+<ul>
+  <li>Can not connect to database? <br/>
+   Make sure the connection string is connected to the local server instance machine where the database resides.
+  </li>
+  <li>No swagger on api? <br/>
+    On the api properties, add the start up url to be http://localhost:44341/swagger</li>
+  <li>Could not find a part of the path ... bin\roslyn\csc.exe?<br/>
+    Run "Update-Package Microsoft.CodeDom.Providers.DotNetCompilerPlatform -r"</li>
+</ul>
