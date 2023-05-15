@@ -3,9 +3,11 @@ using ManageStores.Interfaces;
 using ManageStoresModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 
 namespace ManageStores.Controllers
@@ -82,7 +84,36 @@ namespace ManageStores.Controllers
             return RedirectToAction("AddStores");
         }
 
-
-        public async Task<ActionResult> AddStoresProducts() => View(new StoreProductUpload());
+        public FileResult DownloadTemplate(int Id)
+        {
+            switch (Id)
+            {
+                case 4:
+                    return File(System.IO.File.ReadAllBytes(HostingEnvironment.MapPath("~/Content/Templates/StoreCSVTemplate.csv"))
+                                , System.Net.Mime.MediaTypeNames.Application.Octet
+                                , Path.GetFileName(HostingEnvironment.MapPath("~/Content/Templates/StoreCSVTemplate.csv")));
+                case 5:
+                    return File(System.IO.File.ReadAllBytes(HostingEnvironment.MapPath("~/Content/Templates/StoreJsonTemplate.json"))
+                                , System.Net.Mime.MediaTypeNames.Application.Octet
+                                , Path.GetFileName(HostingEnvironment.MapPath("~/Content/Templates/StoreJsonTemplate.json")));
+                case 6:
+                    return File(System.IO.File.ReadAllBytes(HostingEnvironment.MapPath("~/Content/Templates/StoreXMLTemplate.xml"))
+                                , System.Net.Mime.MediaTypeNames.Application.Octet
+                                , Path.GetFileName(HostingEnvironment.MapPath("~/Content/Templates/StoreXMLTemplate.xml")));
+                case 7:
+                    return File(System.IO.File.ReadAllBytes(HostingEnvironment.MapPath("~/Content/Templates/StoreProductCSVTemplate.csv"))
+                                , System.Net.Mime.MediaTypeNames.Application.Octet
+                                , Path.GetFileName(HostingEnvironment.MapPath("~/Content/Templates/StoreProductCSVTemplate.csv")));
+                case 8:
+                    return File(System.IO.File.ReadAllBytes(HostingEnvironment.MapPath("~/Content/Templates/StoreProductJsonTemplate.json"))
+                                , System.Net.Mime.MediaTypeNames.Application.Octet
+                                , Path.GetFileName(HostingEnvironment.MapPath("~/Content/Templates/StoreProductJsonTemplate.json")));
+                case 9:
+                    return File(System.IO.File.ReadAllBytes(HostingEnvironment.MapPath("~/Content/Templates/StoreProductXMLTemplate.xml"))
+                                , System.Net.Mime.MediaTypeNames.Application.Octet
+                                , Path.GetFileName(HostingEnvironment.MapPath("~/Content/Templates/StoreProductXMLTemplate.xml")));
+            }
+            return null;
+        }
     }
 }

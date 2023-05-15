@@ -72,7 +72,6 @@ namespace ManageStores.Controllers
                     return File(System.IO.File.ReadAllBytes(HostingEnvironment.MapPath("~/Content/Templates/ProductXMLTemplate.xml"))
                                 , System.Net.Mime.MediaTypeNames.Application.Octet
                                 , Path.GetFileName(HostingEnvironment.MapPath("~/Content/Templates/ProductXMLTemplate.xml")));
-                    break;
             }
             return null;
         }

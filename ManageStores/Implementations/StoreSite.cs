@@ -323,7 +323,7 @@ namespace ManageStores.Implementations
                 XmlReader xmlReader = XmlReader.Create(fullFilePath);
                 while (xmlReader.Read())
                 {
-                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "Store"))
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "Branch"))
                     {
                         if (xmlReader.HasAttributes)
                         {
