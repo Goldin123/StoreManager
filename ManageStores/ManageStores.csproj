@@ -2107,6 +2107,8 @@
     <Content Include="Content\plugins\uplot\uPlot.min.css" />
     <Content Include="Content\plugins\xml-js.min.js" />
     <Content Include="Content\Templates\ProductXMLTemplate.xml" />
+    <Content Include="Content\Templates\StoreProductXMLTemplate.xml" />
+    <Content Include="Content\Templates\StoreXMLTemplate.xml" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -2251,6 +2253,10 @@
     <Content Include="Content\dist\js\adminlte.min.js.map" />
     <Content Include="Content\Templates\ProductCSVTemplate.csv" />
     <Content Include="Content\Templates\ProductJsonTemplate.json" />
+    <Content Include="Content\Templates\StoreCSVTemplate.csv" />
+    <Content Include="Content\Templates\StoreJsonTemplate.json" />
+    <Content Include="Content\Templates\StoreProductCSVTemplate.csv" />
+    <Content Include="Content\Templates\StoreProductJsonTemplate.json" />
     <None Include="Scripts\jquery-3.6.4.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.4.js" />
     <Content Include="Scripts\jquery-3.6.4.min.js" />

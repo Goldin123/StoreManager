@@ -311,7 +311,7 @@ namespace ManageStores.Implementations
                 XmlReader xmlReader = XmlReader.Create(fullFilePath);
                 while (xmlReader.Read())
                 {
-                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "Mappings"))
+                    if ((xmlReader.NodeType == XmlNodeType.Element) && (xmlReader.Name == "BranchProduct"))
                     {
                         if (xmlReader.HasAttributes)
                         {
